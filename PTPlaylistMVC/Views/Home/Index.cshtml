@@ -1,31 +1,61 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div id="textAbovePlayer">
+    <label id="videoLabel" class="ownLine">Player: </label>
+</div>
+<div id="player"></div>
+<div id="playerButtons">
+    <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
+    <button id="pauseVideo" onclick="pauseVideo()" tabIndex="-1">Pause</button>
+    <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<div id="playerSizeButtons">
+    <button id="tinyPlayerButton" onclick="setPlayerSize(180, 180)" tabIndex="-1">Tiny Player</button>
+    <button id="smallPlayerButton" onclick="setPlayerSize(320, 195)" tabIndex="-1">Small Player</button>
+    <button id="mediumPlayerButton" onclick="setPlayerSize(640, 390)" tabIndex="-1">Medium Player</button>
+    <button id="largePlayerButton" onclick="setPlayerSize(1280, 780)" tabIndex="-1">Large Player</button>
+    <button id="HugePlayerButton" onclick="setPlayerSize(1600, 975)" tabIndex="-1">Huge Player</button>
+</div>
+
+<div id="playlistViewer">
+    <textArea id="playlistPreview" rows="5" cols="85" type="text" readonly>Playlist</textArea>
+</div>
+
+<div id="playlistButtons">
+    <button id="shuffle-button" onclick="shufflePlaylist()">Shuffle Playlist</button>
+    <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
+</div>
+
+<div id="inputArea">
+    <label>
+        <textarea id="query" rows="5" cols="85" type="text">Insert list of YouTube things here!</textarea>
+    </label>
+</div>
+
+<div id="inputButtons">
+    <div id="inputModifiers">
+        <div id="delimiterSelectContainer" class="ownLine">
+            <label class="">Input Delimeter: </label>
+            <select class="" id="inputDelimeterSelect">
+                <option value="\r\n">Newline ('\n')</option>
+                <option value=",">Comma (',')</option>
+                <option value="|">Pipe ('|')</option>
+                <option value=":">Colon (':')</option>
+                <option value=";">Semi-Colon (';')</option>
+                <option value="/">Forward Slash ('/')</option>
+                <option value="\">Back Slash ('\')</option>
+            </select>
+        </div>
+        <div id="shuffleInputCheckContainer" class="ownLine">
+            <label class="">Shuffle Input: </label><input id="shuffleCheck" type="checkbox" name="shuffle" checked />
+        </div>
+        <div>
+            <label class="">Add to Front of List: </label><input id="addFrontCheck" type="checkbox" name="addFront" />
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
+    <button id="search-button" onclick="search()">Add to Playlist</button>
 </div>
