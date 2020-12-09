@@ -10,7 +10,7 @@ var playlist = []; 		// List of videoIds for the player to play.
 var playedVideos = []; 	// List of videoIds that have been played.
 var currentVideo; 		// The currently-playing videoId.
 
-// This should be server side... 
+// This should be server side...
 var apiKey = "AIzaSyDsAmVRl5Gh6erfNjNQ-DBpeKa-5ukIcxc";
 
 // ------------------------- DOCUMENT FUNCTIONS -----------------------------
@@ -70,8 +70,8 @@ function onYouTubeIframeAPIReady()
 {
 	player = new YT.Player('player', 
 	{
-		height: '195', //390
-		width: '320', //640
+		height: '390',
+		width: '640',
 		videoId: '',
 		events: 
 		{
