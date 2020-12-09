@@ -1,7 +1,7 @@
 // TODO: Database storing searches and videoIds to avoid searching "unnecessarily"?
 // TODO: Add table for playlist objects. Make drag 'n' droppable. Make songs removable. 
 // TODO: If video not found, show error?
-// TODO: Scrolling with spacebar still happening?
+// TODO: Scrolling with spacebar still happening
 // TODO: Display YouTube terms and conditions: https://www.youtube.com/t/terms
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
@@ -17,13 +17,6 @@ var apiKey = "AIzaSyDsAmVRl5Gh6erfNjNQ-DBpeKa-5ukIcxc";
 // Primary test to show application is working.
 $(function() {
 	console.log("ready!");
-
-	gapi.load("client:auth2", function() {
-		gapi.auth2.init({
-			client_id: "369876099874-5nb8ap448dud9eb1h2m8nofbasjpqsi4.apps.googleusercontent.com",
-			scope: "https://www.googleapis.com/auth/youtube.readonly"
-		});
-	});
 
 	document.getElementById("query").readOnly = false;
 	
@@ -42,7 +35,7 @@ function onKeyUp(evt) {
 			case 32: //spacebar
 				// Don't interrupt typing input
 				if (!($("#query").is(':focus'))) {
-					$(document.getElementById("body")).focus();
+					document.getElementsByTagName("body")[0].focus();
 					evt.preventDefault(); // Don't scroll down the page!
 					onSpaceBarUp();
 					return false; // Don't scroll down the page!
@@ -156,8 +149,7 @@ function search()
 	
 	showPlaylist();
 	
-	if (!currentVideo) // If we haven't been told to play a video ever...
-	{
+	if (!currentVideo) { // If we haven't been told to play a video ever...
 		// Attempt to play a video
 		nextVideo();
 	}
@@ -209,51 +201,44 @@ function setCurrentVideoId(input) {
 // Places playlist text into the playlistPreview element.
 function showPlaylist() {
 	var buildString = "";
-	for(var playedVideoIndex = 0; playedVideoIndex < playedVideos.length; playedVideoIndex++)
-	{
+	for (var playedVideoIndex = 0; playedVideoIndex < playedVideos.length; playedVideoIndex++) {
 		buildString = buildString + (playedVideos[playedVideoIndex][0].trim()) + '\r\n';
 	}
 	
-	if (currentVideo != null && currentVideo[0] != null)
-	{
+	if (currentVideo != null && currentVideo[0] != null) {
 		buildString = buildString + currentVideo[0].trim() + '\r\n';
 	}
 	
-	for(var i = 0; i < playlist.length; ++i)
-	{
+	for(var i = 0; i < playlist.length; ++i) {
 		buildString = buildString + (playlist[i][0].trim()) + '\r\n';
 	}
-	$('#playlistPreview').attr("value", buildString);
+
+	document.getElementById("playlistPreview").innerHTML = buildString;
 	showCurrentSong();
 }
 
 // Highlights the currently playing song in the playlistPreview element.
 function showCurrentSong() {
-	if (currentVideo)
-	{
+	if (currentVideo) {
 		// Highlight text in preview box to show user where in the playlist we are.
 		document.title = (currentVideo[0] + " | PTPlaylist");
 		
-		var a = document.createElement('a');
-		var linkText = document.createTextNode(currentVideo[0] + " | " + currentVideo[1]);
+		const a = document.createElement('a');
+		const linkText = document.createTextNode(currentVideo[0] + " | " + currentVideo[1]);
 		a.appendChild(linkText);
 		a.title = currentVideo[0];
 		a.href = "https://www.youtube.com/watch?v=" + currentVideo[1];
-		$('#videoLabel').html('');
-		$('#videoLabel').append(a);
+		document.getElementById('videoLabel').innerHTML = '';
+		document.getElementById('videoLabel').appendChild(a);
 			
-		//$('#videoLabel').text(currentVideo[0] + " | " + currentVideo[1]);
-		var preview = document.getElementById("playlistPreview"); 
-		var startIndexOfVideoText = preview.value.indexOf(currentVideo[0]);
-		var endIndexOfVideoText = startIndexOfVideoText + currentVideo[0].length;
+		const preview = document.getElementById("playlistPreview"); 
+		const startIndexOfVideoText = preview.value.indexOf(currentVideo[0]);
+		const endIndexOfVideoText = startIndexOfVideoText + currentVideo[0].length;
 		preview.setSelectionRange(startIndexOfVideoText, endIndexOfVideoText);
-		if (playedVideos != null && playedVideos.length > 0)
-		{		
+		if (playedVideos != null && playedVideos.length > 0) {
 			// TODO: Goes too far if there is an entry taking up more than one line! Truncate?
 			preview.scrollTop = (playedVideos.length) * 16; // 16 is text size plus margins in the text area. Perhaps this could be calculated...
-		}
-		else
-		{
+		} else {
 			preview.scrollTop = 0;
 		}
 	}
@@ -373,7 +358,6 @@ function nextVideo() {
 			// get next video
 			currentVideo = playlist.shift();
 			cueYoutubeVideo(currentVideo);
-			//playVideo(); // Remove this? CueVideo might play the video...
 		}
 	}
 }
