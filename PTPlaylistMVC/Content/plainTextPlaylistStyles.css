@@ -1,0 +1,71 @@
+/* 
+VERSION: .002
+
+Complimentary: #9FEE00
+Background: #323638
+	Lighter: #0F0F0F
+	Softer: #
+Text: #DBDBDB
+	Darker: #FFD300
+*/
+*{
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 80px !important;
+}
+
+div {
+	min-width: 640px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.DragBox, .OverDragBox, .DragDragBox, .miniDragBox {
+	display: block;
+    border: #000 1px solid;
+	min-width: 100px;
+    padding: 2px;
+    font-size: 10px;
+    margin-bottom: 5px;
+    width: 94px;
+    cursor: pointer;
+    font-family: verdana, tahoma, arial;
+    background-color: #eee;
+}
+
+.DragContainer,
+.OverDragContainer {
+	display: block;
+    float: left;
+    margin: 3px;
+    min-width: 110px;
+    border: #669999 2px solid;
+    padding: 5px;
+}
+
+#.navbar-collapse{
+	height: 80px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+.footer>.container {
+	margin-right:20px;
+	margin-top:15px;
+}
