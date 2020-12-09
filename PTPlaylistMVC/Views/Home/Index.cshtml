@@ -2,6 +2,9 @@
     ViewBag.Title = "Home";
 }
 
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 <div id="textAbovePlayer">
     <label id="videoLabel" class="ownLine">Player: </label>
 </div>
@@ -59,3 +62,5 @@
 
     <button id="search-button" onclick="search()">Add to Playlist</button>
 </div>
+
+@Scripts.Render("~/bundles/ptplaylist")
