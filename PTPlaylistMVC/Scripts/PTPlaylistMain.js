@@ -101,7 +101,6 @@ Data enum for possible values of "event.data":
 */
 function onPlayerStateChange(event)
 {
-	//alert("onPlayerStateChange() called with result: " + event.data);
 	if (event.data == 0)
 	{
 		nextVideo();
@@ -351,7 +350,7 @@ function nextVideo() {
 	if (player && playlist != null) {
 		// push current video to playedVideos
 		if (currentVideo != null) {
-			playedVideos.push(currentVideo);			
+			playedVideos.push(currentVideo);
 		}
 		
 		if (playlist.length > 0) {
