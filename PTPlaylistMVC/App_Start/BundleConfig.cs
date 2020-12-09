@@ -24,7 +24,6 @@ namespace PTPlaylistMVC
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ptplaylist").Include(
-                    "~/Scripts/auth.js",
                     "~/Scripts/PTPlaylistMain.js"));
 
             /* Styles */
