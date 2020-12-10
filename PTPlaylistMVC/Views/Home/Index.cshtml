@@ -7,17 +7,17 @@
 }
 
 <script src="https://www.youtube.com/iframe_api"></script>
-<div id="textAbovePlayer">
+<div id="textAbovePlayer" class="playlist-div">
     <label id="videoLabel" class="ownLine">Player: </label>
 </div>
-<div id="player"></div>
-<div id="playerButtons">
+<div id="player" class="playlist-div"></div>
+<div id="playerButtons" class="playlist-div">
     <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
     <button id="pauseVideo" onclick="pauseVideo()" tabIndex="-1">Pause</button>
     <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
 </div>
 
-<div id="playerSizeButtons">
+<div id="playerSizeButtons" class="playlist-div">
     <button id="tinyPlayerButton" onclick="setPlayerSize(180, 180)" tabIndex="-1">Tiny Player</button>
     <button id="smallPlayerButton" onclick="setPlayerSize(320, 195)" tabIndex="-1">Small Player</button>
     <button id="mediumPlayerButton" onclick="setPlayerSize(640, 390)" tabIndex="-1">Medium Player</button>
@@ -25,22 +25,22 @@
     <button id="HugePlayerButton" onclick="setPlayerSize(1600, 975)" tabIndex="-1">Huge Player</button>
 </div>
 
-<div id="playlistViewer">
-    <textArea id="playlistPreview" rows="5" cols="85" type="text" readonly>Playlist</textArea>
+<div id="playlistViewer" class="playlist-div">
+    <textArea id="playlistPreview" rows="5" cols="120" type="text" readonly>Playlist</textArea>
 </div>
 
-<div id="playlistButtons">
+<div id="playlistButtons" class="playlist-div">
     <button id="shuffle-button" onclick="shufflePlaylist()">Shuffle Playlist</button>
     <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
 </div>
 
-<div id="inputArea">
+<div id="inputArea" class="playlist-div">
     <label>
-        <textarea id="query" rows="5" cols="85" type="text">Insert list of YouTube things here!</textarea>
+        <textarea id="query" rows="5" cols="120" type="text">Insert list of YouTube things here!</textarea>
     </label>
 </div>
 
-<div id="inputButtons">
+<div id="inputButtons" class="playlist-div">
     <div id="inputModifiers">
         <div id="delimiterSelectContainer" class="ownLine">
             <label class="">Input Delimeter: </label>
