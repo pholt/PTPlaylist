@@ -2,7 +2,6 @@
 // TODO: Add table for playlist objects. Make drag 'n' droppable. Make songs removable. 
 // TODO: If video not found, show error?
 // TODO: Scrolling with spacebar still happening
-// TODO: Display YouTube terms and conditions: https://www.youtube.com/t/terms
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
 var player; 			// Object handling youtube video player usage.
