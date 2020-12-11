@@ -9,14 +9,10 @@ var playlist = []; 		// List of videoIds for the player to play.
 var playedVideos = []; 	// List of videoIds that have been played.
 var currentVideo; 		// The currently-playing videoId.
 
-// This should be server side...
 var apiKey = "AIzaSyDsAmVRl5Gh6erfNjNQ-DBpeKa-5ukIcxc";
 
 // ------------------------- DOCUMENT FUNCTIONS -----------------------------
-// Primary test to show application is working.
 $(function() {
-	console.log("ready!");
-
 	document.getElementById("query").readOnly = false;
 	
 	// Add listener for spacebar: pauses or plays video.
@@ -35,11 +31,12 @@ function onKeyUp(evt) {
 				// Don't interrupt typing input
 				if (!($("#query").is(':focus'))) {
 					document.getElementsByTagName("body")[0].focus();
-					evt.preventDefault(); // Don't scroll down the page!
+					evt.preventDefault();
 					onSpaceBarUp();
-					return false; // Don't scroll down the page!
+					return false;
 				}
 				break;
+
 			default:
 				break;
 		}
@@ -50,23 +47,19 @@ function onKeyUp(evt) {
 function onSpaceBarUp() {
 	if (player && currentVideo != null && currentVideo[1] != null) {
 		var state = player.getPlayerState();
-		if (state == 1) {
-			// Is playing
+		if (state == 1) { // Is playing
 			pauseVideo();
-		} else if (state == 2) {
-			// Is paused
+		} else if (state == 2) { // Is paused
 			playVideo();
-		} else {
-			// Anything else?
-			console("Spacebar hit, but the player state was: " + state);
+		} else { // Anything else?
+			console.log("Spacebar hit, but the player state was: " + state);
 		}
 	}
 }
 
 // ------------------------- MAIN -----------------------------
 // Sets up our youtube player object. Assigns listeners.
-function onYouTubeIframeAPIReady() 
-{
+function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', 
 	{
 		height: '390',
@@ -81,8 +74,7 @@ function onYouTubeIframeAPIReady()
 }
 
 // Called when the video player is ready.
-function onPlayerReady(event) 
-{
+function onPlayerReady(event) {
 	//event.target.playVideo();
 }
 
@@ -98,45 +90,34 @@ Data enum for possible values of "event.data":
 	4 = ???
 	5 = video cued
 */
-function onPlayerStateChange(event)
-{
-	if (event.data == 0)
-	{
+function onPlayerStateChange(event) {
+	if (event.data == 0) {
 		nextVideo();
-	}
-	
-	if (event.data == 5)
-	{
+	} else if (event.data == 5) {
 		playVideo();
 	}
 }
 
 // After the API loads, call a function to enable the search box.
-function handleAPILoaded() 
-{
+function handleAPILoaded() {
 	$('#search-button').attr('disabled', false);
 }
 
 // Separates inputs and adds them to the playlist.
 // Called when the "Add to Playlist" button is pressed.
-function search()
-{
-	var input = $('#query').val().replace("-", " "); // Pesky dashes mess up the input.
-	
-	var inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
+function search() {
+	const input = $('#query').val().replace("-", " "); // Pesky dashes mess up the input.
+	const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
 	// Use newline regex if we have the first index, otherwise, go get the value
-	var delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = /\n/ : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value; 
-
-	console.log("Selected delimeter: " + delimiter);
-	var separatedValues = input.split(delimiter); // Get array of values.
+	const delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = /\n/ : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value; 
+	const separatedValues = input.split(delimiter); // Get array of values.
 	
 	if($('#shuffleCheck').prop('checked')) {
 		shuffleArray(separatedValues);
 	}
 	
 	for (var i = 0; i < separatedValues.length; i++) {
-		if (separatedValues[i] != null && separatedValues[i].trim() != "") // Skip empty strings
-		{
+		if (separatedValues[i] != null && separatedValues[i].trim() != "") { // Skip empty strings
 			if ($('#addFrontCheck').prop('checked')) {
 				playlist.unshift([separatedValues[i], null]); // Add to beginning of playlist
 			} else {
@@ -192,14 +173,14 @@ function setCurrentVideoId(input) {
 	if (currentVideo && input != null && input != "")
 	{
 		currentVideo = [currentVideo[0], input];
-		cueYoutubeVideo(currentVideo);	
+		cueYoutubeVideo(currentVideo);
 	}
 }
 
 // Places playlist text into the playlistPreview element.
 function showPlaylist() {
 	var buildString = "";
-	for (var playedVideoIndex = 0; playedVideoIndex < playedVideos.length; playedVideoIndex++) {
+	for (let playedVideoIndex = 0; playedVideoIndex < playedVideos.length; playedVideoIndex++) {
 		buildString = buildString + (playedVideos[playedVideoIndex][0].trim()) + '\r\n';
 	}
 	
@@ -207,7 +188,7 @@ function showPlaylist() {
 		buildString = buildString + currentVideo[0].trim() + '\r\n';
 	}
 	
-	for(var i = 0; i < playlist.length; ++i) {
+	for (let i = 0; i < playlist.length; ++i) {
 		buildString = buildString + (playlist[i][0].trim()) + '\r\n';
 	}
 
@@ -264,6 +245,7 @@ function setPlayerSize(width, height) {
 	if (height < 180){
 		height = 180;
 	}
+
 	player.setSize(width, height);
 }
 
@@ -274,7 +256,7 @@ function setPlayerSize(width, height) {
  * https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array-in-javascript
  */
 function shuffleArray(a, callback) {
-    var j, x, i;
+    let j, x, i;
     for (i = a.length; i; i--) 
 	{
         j = Math.floor(Math.random() * i);
@@ -367,7 +349,6 @@ function previousVideo() {
 		// pop current video from back of playedVideos
 		currentVideo = playedVideos.pop();
 		cueYoutubeVideo(currentVideo);
-		//playVideo(); // Unnecessary? CueVideo might play the video...
 	}
 }
 
