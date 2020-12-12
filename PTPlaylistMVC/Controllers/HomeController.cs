@@ -8,7 +8,7 @@ namespace PTPlaylistMVC.Controllers
 {
     public class HomeController : Controller
     {
-        const string API_KEY = "AIzaSyDsAmVRl5Gh6erfNjNQ-DBpeKa-5ukIcxc";
+        static string API_KEY = System.Web.Configuration.WebConfigurationManager.AppSettings["API_KEY"];
 
         public ActionResult Index()
         {

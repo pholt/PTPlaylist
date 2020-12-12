@@ -5,9 +5,8 @@
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
 var player; 			// Object handling youtube video player usage.
-var playlist = []; 		// List of videoIds for the player to play.
-var playedVideos = []; 	// List of videoIds that have been played.
-var currentVideo; 		// The currently-playing videoId.
+var playlist = []; 		// List of {searchTerm, videoId} objects for the player to play.
+var currentVideoIndex; 	// Index of the currently-cued videoId.
 
 var apiKey = "AIzaSyDsAmVRl5Gh6erfNjNQ-DBpeKa-5ukIcxc";
 
@@ -46,7 +45,7 @@ function onKeyUp(evt) {
 // Pauses/plays video when spacebar is hit.
 function onSpaceBarUp() {
 	if (player && currentVideo != null && currentVideo[1] != null) {
-		var state = player.getPlayerState();
+		const state = player.getPlayerState();
 		if (state == 1) { // Is playing
 			pauseVideo();
 		} else if (state == 2) { // Is paused
@@ -115,20 +114,28 @@ function search() {
 	if($('#shuffleCheck').prop('checked')) {
 		shuffleArray(separatedValues);
 	}
-	
+
+	const videosToBeAdded = [];
 	for (var i = 0; i < separatedValues.length; i++) {
 		if (separatedValues[i] != null && separatedValues[i].trim() != "") { // Skip empty strings
-			if ($('#addFrontCheck').prop('checked')) {
-				playlist.unshift([separatedValues[i], null]); // Add to beginning of playlist
-			} else {
-				playlist.push([separatedValues[i], null]); // Add to end of playlist
-			}
+			videosToBeAdded.push({
+				searchTerm : separatedValues[i],
+				videoId : null
+			});
 		}
 	}
-	
+
+	if ($('#addFrontCheck').prop('checked') && currentVideoIndex > 0) {
+		const previousSection = playlist.slice(0, currentVideoIndex + 1);
+		const laterSection = playlist.slice(currentVideoIndex + 1);
+		playlist = previousSection.concat(videosToBeAdded, laterSection);
+	} else {
+		playlist = playlist.concat(videosToBeAdded);
+	}
+
 	showPlaylist();
 	
-	if (!currentVideo) { // If we haven't been told to play a video ever...
+	if (currentVideoIndex == -1) { // If we haven't been told to play a video ever...
 		// Attempt to play a video
 		nextVideo();
 	}
@@ -136,7 +143,7 @@ function search() {
 	$('#query').val(""); // Clear input field so users don't accidentally add the same input twice.
 }
 
-// Queries the YouTube API for the video id then sets the currentVideo id.
+// Queries the YouTube API for the video.
 function queryForVideoId(input) {
 	if (input) {
 		var url = 'https://www.googleapis.com/youtube/v3/search';
@@ -156,40 +163,33 @@ function queryForVideoId(input) {
 	}
 }
 
+// Populates current video with id then plays it
 function handleYoutubeSearchResult(result) {
 	if (result != null &&
 		result.items != null &&
 		result.items[0] != null &&
 		result.items[0].id != null) {
-		setCurrentVideoId(result.items[0].id.videoId);
+		playlist[currentVideoIndex].videoId = result.items[0].id.videoId;
 	} else {
 		// Not found. Do something?
-		nextVideo(0);
+		nextVideo();
 	}
 }
 
 // Sets the currentVideo to the input value
-function setCurrentVideoId(input) {
-	if (currentVideo && input != null && input != "")
-	{
-		currentVideo = [currentVideo[0], input];
-		cueYoutubeVideo(currentVideo);
-	}
+function setCurrentVideo(index) {
+	if (index > 0 && index < playlist.length) {
+		currentVideoIndex = index;
+		cueYoutubeVideo(playlist[currentVideoIndex]);
+    }
 }
 
 // Places playlist text into the playlistPreview element.
 function showPlaylist() {
 	var buildString = "";
-	for (let playedVideoIndex = 0; playedVideoIndex < playedVideos.length; playedVideoIndex++) {
-		buildString = buildString + (playedVideos[playedVideoIndex][0].trim()) + '\r\n';
-	}
-	
-	if (currentVideo != null && currentVideo[0] != null) {
-		buildString = buildString + currentVideo[0].trim() + '\r\n';
-	}
 	
 	for (let i = 0; i < playlist.length; ++i) {
-		buildString = buildString + (playlist[i][0].trim()) + '\r\n';
+		buildString = buildString + (playlist[i].searchTerm.trim()) + '\r\n';
 	}
 
 	document.getElementById("playlistPreview").innerHTML = buildString;
@@ -198,28 +198,27 @@ function showPlaylist() {
 
 // Highlights the currently playing song in the playlistPreview element.
 function showCurrentSong() {
-	if (currentVideo) {
-		// Highlight text in preview box to show user where in the playlist we are.
-		document.title = (currentVideo[0] + " | PTPlaylist");
+	if (currentVideoIndex >= 0 && currentVideoIndex < playlist.length) {
+		const searchTerm = playlist[currentVideoIndex].searchTerm;
+		const videoId = playlist[currentVideoIndex].videoId;
+
+		document.title = (searchTerm + " | PTPlaylist");
 		
 		const a = document.createElement('a');
-		const linkText = document.createTextNode(currentVideo[0] + " | " + currentVideo[1]);
+		const linkText = document.createTextNode(searchTerm + " | " + videoId);
 		a.appendChild(linkText);
-		a.title = currentVideo[0];
-		a.href = "https://www.youtube.com/watch?v=" + currentVideo[1];
+		a.title = searchTerm;
+		a.href = "https://www.youtube.com/watch?v=" + videoId;
 		document.getElementById('videoLabel').innerHTML = '';
 		document.getElementById('videoLabel').appendChild(a);
-			
+
+		// Highlight text in preview box to show user where in the playlist we are.
 		const preview = document.getElementById("playlistPreview"); 
-		const startIndexOfVideoText = preview.value.indexOf(currentVideo[0]);
-		const endIndexOfVideoText = startIndexOfVideoText + currentVideo[0].length;
+		const startIndexOfVideoText = preview.value.indexOf(searchTerm);
+		const endIndexOfVideoText = startIndexOfVideoText + searchTerm.length;
 		preview.setSelectionRange(startIndexOfVideoText, endIndexOfVideoText);
-		if (playedVideos != null && playedVideos.length > 0) {
-			// TODO: Goes too far if there is an entry taking up more than one line! Truncate?
-			preview.scrollTop = (playedVideos.length) * 16; // 16 is text size plus margins in the text area. Perhaps this could be calculated...
-		} else {
-			preview.scrollTop = 0;
-		}
+		// TODO: Goes too far if there is an entry taking up more than one line! Truncate?
+		preview.scrollTop = (currentVideoIndex) * 16; // 16 is text size plus margins in the text area. Perhaps this could be calculated...
 	}
 }
 
@@ -231,7 +230,7 @@ function shufflePlaylist() {
 // Empties the playlist!
 function clearPlaylist() {
 	playlist = [];
-	playedVideos = [];
+	currentVideoIndex = -1;
 	$('#playlistPreview').attr("value", currentVideo[0] + " | " + currentVideo[1]);
 }
 
@@ -328,65 +327,61 @@ function pauseVideo() {
 }
 
 function nextVideo() {
-	if (player && playlist != null) {
-		// push current video to playedVideos
-		if (currentVideo != null) {
-			playedVideos.push(currentVideo);
-		}
+	if (player) {
+		currentVideoIndex++;
 		
-		if (playlist.length > 0) {
-			// get next video
-			currentVideo = playlist.shift();
-			cueYoutubeVideo(currentVideo);
+		if (currentVideoIndex < playlist.length) {
+			cueYoutubeVideo(playlist[currentVideoIndex]);
 		}
 	}
 }
 
 function previousVideo() {
-	if (playedVideos != null && playedVideos.length  > 0 && player) {
-		// unshift current video to front of playlist
-		playlist.unshift(currentVideo);
-		// pop current video from back of playedVideos
-		currentVideo = playedVideos.pop();
-		cueYoutubeVideo(currentVideo);
+	if (player) {
+		currentVideoIndex--;
+
+		if (currentVideoIndex >= 0) {
+			cueYoutubeVideo(playlist[currentVideoIndex]);
+        } else {
+			currentVideoIndex = -1;
+			stopVideo();
+		}
 	}
 }
 
 function restartPlaylist() {
 	if (player) {
-		// put currentVideo back into playlist
-		// dump all from playedVideos back to playlist (unshift?)
-		// play first video from playlist
+		currentVideoIndex = 0;
 	}
 }
 
-function removeVideoFromPlaylist(input) {
-	
-}
+// TODO: This is untested and buggy
+function removeVideoFromPlaylist(index) {
+	if (player && playlist != null && index >= 0 && index < playlist.length) {
 
-function removeCurrentVideoFromPlaylist() {
-	if (player && playlist != null) {
-		// Get rid of current video
-		currentVideo = null;
-		
-		if(playlist.length > 0) {
-			// get next video
-			currentVideo = playlist.shift();
-			cueYoutubeVideo(currentVideo);
-		}
-	}
+		playlist.splice(index);
+
+		if (index < currentVideoIndex) {
+			currentVideoIndex--;
+		} else if (currentVideoIndex == index) {
+			// Plays the next song
+			cueYoutubeVideo(playlist[currentVideoIndex]);
+        }
+
+	} else {
+		console.log("Tried to remove song with index " + index + ", but legal indices are between 0 and " + playlist.length - 1);
+    }
 }
 
 // Assign a video to the youtube player. If no id is found, searches for it first.
 function cueYoutubeVideo(video) {
-	if (player && video != null) {
-		if (video[1] != null && video[1] != "") {
-			player.cueVideoById(video[1], 0, "large");
-			//showCurrentSong();
+	if (player && video !== null) {
+		if (video.videoId) {
+			player.cueVideoById(video.videoId, 0, "large");
 		} else {
 			// Pause or stop?
 			stopVideo();
-			queryForVideoId(video[0]);
+			queryForVideoId(video.searchTerm);
 		}
 	}
 }
