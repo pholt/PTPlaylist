@@ -141,6 +141,9 @@
     <None Include="Properties\PublishProfiles\plaintextplaylist - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\plaintextplaylist - ReadOnly - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\plaintextplaylist - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\plaintextplaylist-test - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\plaintextplaylist-test - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\plaintextplaylist-test - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

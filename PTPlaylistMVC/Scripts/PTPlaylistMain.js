@@ -6,9 +6,7 @@
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
 var player; 			// Object handling youtube video player usage.
 var playlist = []; 		// List of {searchTerm, videoId} objects for the player to play.
-var currentVideoIndex; 	// Index of the currently-cued videoId.
-
-var apiKey = "AIzaSyDsAmVRl5Gh6erfNjNQ-DBpeKa-5ukIcxc";
+var currentVideoIndex = -1; 	// Index of the currently-cued videoId, set to -1 when nothing is cued.
 
 // ------------------------- DOCUMENT FUNCTIONS -----------------------------
 $(function() {
@@ -170,6 +168,10 @@ function handleYoutubeSearchResult(result) {
 		result.items[0] != null &&
 		result.items[0].id != null) {
 		playlist[currentVideoIndex].videoId = result.items[0].id.videoId;
+		if (currentVideoIndex == -1) {
+			currentVideoIndex = 0;
+        }
+		setCurrentVideo(currentVideoIndex);
 	} else {
 		// Not found. Do something?
 		nextVideo();
@@ -178,7 +180,7 @@ function handleYoutubeSearchResult(result) {
 
 // Sets the currentVideo to the input value
 function setCurrentVideo(index) {
-	if (index > 0 && index < playlist.length) {
+	if (index >= 0 && index < playlist.length) {
 		currentVideoIndex = index;
 		cueYoutubeVideo(playlist[currentVideoIndex]);
     }
@@ -224,14 +226,17 @@ function showCurrentSong() {
 
 // Shuffles the playlist!
 function shufflePlaylist() {
-	shuffleArray(playlist, showPlaylist);
+	const previousSection = playlist.slice(0, currentVideoIndex + 1);
+	const laterSection = playlist.slice(currentVideoIndex + 1);
+	shuffleArray(laterSection);
+	playlist = previousSection.concat(laterSection);
+	showPlaylist();
 }
 
 // Empties the playlist!
 function clearPlaylist() {
 	playlist = [];
 	currentVideoIndex = -1;
-	$('#playlistPreview').attr("value", currentVideo[0] + " | " + currentVideo[1]);
 }
 
 // Sets the size of the video player
@@ -315,7 +320,7 @@ function stopVideo() {
 function playVideo() {
 	if (player) {
 		showCurrentSong();
-		player.playVideo();	
+		player.playVideo();
 	}
 }
 
@@ -330,7 +335,7 @@ function nextVideo() {
 	if (player) {
 		currentVideoIndex++;
 		
-		if (currentVideoIndex < playlist.length) {
+		if (currentVideoIndex >= 0 && currentVideoIndex < playlist.length) {
 			cueYoutubeVideo(playlist[currentVideoIndex]);
 		}
 	}
@@ -352,10 +357,10 @@ function previousVideo() {
 function restartPlaylist() {
 	if (player) {
 		currentVideoIndex = 0;
+		cueYoutubeVideo(playlist[currentVideoIndex]);
 	}
 }
 
-// TODO: This is untested and buggy
 function removeVideoFromPlaylist(index) {
 	if (player && playlist != null && index >= 0 && index < playlist.length) {
 

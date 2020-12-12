@@ -12,6 +12,7 @@ namespace PTPlaylistMVC.Controllers
 
         public ActionResult Index()
         {
+            ViewBag.API_KEY = API_KEY;
             return View();
         }
     }
