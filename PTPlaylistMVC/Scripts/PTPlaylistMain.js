@@ -100,11 +100,6 @@ function onPlayerStateChange(event) {
 	}
 }
 
-// After the API loads, call a function to enable the search box.
-function handleAPILoaded() {
-	$('#search-button').attr('disabled', false);
-}
-
 // Separates inputs and adds them to the playlist.
 // Called when the "Add to Playlist" button is pressed.
 function search() {
@@ -166,7 +161,7 @@ function queryForVideoId(input) {
 	}
 }
 
-// Populates current video with id then plays it
+// Populates current video with id
 function handleYoutubeSearchResult(result) {
 	if (result != null &&
 		result.items != null &&
@@ -183,7 +178,7 @@ function handleYoutubeSearchResult(result) {
 	}
 }
 
-// Sets the currentVideo to the input value
+// Sets the currentVideo to the video in the playlist with the given index
 function setCurrentVideo(index) {
 	if (index >= 0 && index < playlist.length) {
 		currentVideoIndex = index;
@@ -229,7 +224,7 @@ function showCurrentSong() {
 	}
 }
 
-// Shuffles the playlist!
+// Shuffles the playlist
 function shufflePlaylist() {
 	const previousSection = playlist.slice(0, currentVideoIndex + 1);
 	const laterSection = playlist.slice(currentVideoIndex + 1);
@@ -238,7 +233,7 @@ function shufflePlaylist() {
 	showPlaylist();
 }
 
-// Empties the playlist!
+// Resets playlist state to "no videos in playlist and we've never played anything"
 function clearPlaylist() {
 	playlist = [];
 	currentVideoIndex = -1;
@@ -303,7 +298,7 @@ function shuffleParallelArrays(a, b)
 // Outputs the contents of a dictionary structure to console.
 function logDictionary(dictionary)
 {
-	for(var key in dictionary)
+	for(let key in dictionary)
 	{
 		if (dictionary.hasOwnProperty(key))
 		{
@@ -329,7 +324,7 @@ function playVideo() {
 	}
 }
 
-// internal function for pausing currently queued video.
+// Internal function for pausing currently queued video.
 function pauseVideo() {
 	if (player) {
 		player.pauseVideo();
@@ -368,7 +363,6 @@ function restartPlaylist() {
 
 function removeVideoFromPlaylist(index) {
 	if (player && playlist != null && index >= 0 && index < playlist.length) {
-
 		playlist.splice(index);
 
 		if (index < currentVideoIndex) {
@@ -389,7 +383,6 @@ function cueYoutubeVideo(video) {
 		if (video.videoId) {
 			player.cueVideoById(video.videoId, 0, "large");
 		} else {
-			// Pause or stop?
 			stopVideo();
 			queryForVideoId(video.searchTerm);
 		}
