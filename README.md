@@ -2,7 +2,7 @@
 
 This project is designed to help with the following scenario:
 1) You have a playlist of videos on YouTube.
-2) Videos from your playlist disappears because either the channel they're associated with die or they remove the video (for whatever reason).
+2) Videos from your playlist disappear; either the channel they're associated with is dead or they remove the video (for whatever reason).
 3) You have no way of recovering information about these missing videos.
 
 ## Solution:
