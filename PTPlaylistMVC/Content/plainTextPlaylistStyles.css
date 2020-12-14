@@ -18,13 +18,18 @@ html {
   min-height: 100%;
 }
 
+iframe {
+	text-align: center;
+	margin: 0 auto;
+}
+
 .playlist-div {
 	min-width: 640px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
-#.navbar-collapse {
+.navbar-collapse {
 	height: 80px;
 }
 

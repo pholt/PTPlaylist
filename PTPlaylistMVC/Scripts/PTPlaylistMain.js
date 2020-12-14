@@ -11,6 +11,10 @@ var currentVideoIndex = -1; 	// Index of the currently-cued videoId, set to -1 w
 // ------------------------- DOCUMENT FUNCTIONS -----------------------------
 $(function() {
 	document.getElementById("query").readOnly = false;
+	document.getElementById("playerSizeSelect").onchange = function(event) {
+		const dimensions = document.getElementById("playerSizeSelect").value.split(",");
+		setPlayerSize(dimensions[0], dimensions[1]);
+	};
 	
 	// Add listener for spacebar: pauses or plays video.
 	if (document.addEventListener) {
@@ -57,10 +61,11 @@ function onSpaceBarUp() {
 // ------------------------- MAIN -----------------------------
 // Sets up our youtube player object. Assigns listeners.
 function onYouTubeIframeAPIReady() {
+	const dimensions = document.getElementById("playerSizeSelect").value.split(",");
 	player = new YT.Player('player', 
 	{
-		height: '390',
-		width: '640',
+		width: dimensions[0],
+		height: dimensions[1],
 		videoId: '',
 		events: 
 		{

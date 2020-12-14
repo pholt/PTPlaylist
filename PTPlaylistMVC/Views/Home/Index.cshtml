@@ -13,7 +13,7 @@
 <div id="textAbovePlayer" class="playlist-div">
     <label id="videoLabel" class="ownLine">Player: </label>
 </div>
-<div id="player" class="playlist-div"></div>
+<div id="player" class=""></div>
 <div id="playerButtons" class="playlist-div">
     <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
     <button id="pauseVideo" onclick="pauseVideo()" tabIndex="-1">Pause</button>
@@ -21,11 +21,15 @@
 </div>
 
 <div id="playerSizeButtons" class="playlist-div">
-    <button id="tinyPlayerButton" onclick="setPlayerSize(180, 180)" tabIndex="-1">Tiny Player</button>
-    <button id="smallPlayerButton" onclick="setPlayerSize(320, 195)" tabIndex="-1">Small Player</button>
-    <button id="mediumPlayerButton" onclick="setPlayerSize(640, 390)" tabIndex="-1">Medium Player</button>
-    <button id="largePlayerButton" onclick="setPlayerSize(1280, 780)" tabIndex="-1">Large Player</button>
-    <button id="HugePlayerButton" onclick="setPlayerSize(1600, 975)" tabIndex="-1">Huge Player</button>
+    <div id="playerSizeSelectContainer" class="ownLine">
+        <label class="ownLine">Player Size: </label>
+        <select class="" id="playerSizeSelect">
+            <option value="180,180">Tiny (180, 180)</option>
+            <option value="320,195">Small (320, 195)</option>
+            <option value="640,390" selected="selected">Medium (640, 390)</option>
+            <option value="1280,780">Large (1280, 780)</option>
+        </select>
+    </div>
 </div>
 
 <div id="playlistViewer" class="playlist-div">
