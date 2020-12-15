@@ -1,20 +1,16 @@
 // TODO: Database storing searches and videoIds to avoid searching "unnecessarily"?
-// TODO: Add table for playlist objects. Make drag 'n' droppable. Make songs removable. 
 // TODO: If video not found, show error?
 // TODO: Scrolling with spacebar still happening
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
-var player; 			// Object handling youtube video player usage.
-var playlist = []; 		// List of {searchTerm, videoId} objects for the player to play.
+var player; 					// Object handling youtube video player usage.
+var playlist = []; 				// List of {searchTerm, videoId} objects for the player to play.
 var currentVideoIndex = -1; 	// Index of the currently-cued videoId, set to -1 when nothing is cued.
+var $grid;						// Packery grid.
 
 // ------------------------- DOCUMENT FUNCTIONS -----------------------------
 $(function() {
 	document.getElementById("query").readOnly = false;
-	document.getElementById("playerSizeSelect").onchange = function(event) {
-		const dimensions = document.getElementById("playerSizeSelect").value.split(",");
-		setPlayerSize(dimensions[0], dimensions[1]);
-	};
 	
 	// Add listener for spacebar: pauses or plays video.
 	if (document.addEventListener) {
@@ -61,11 +57,10 @@ function onSpaceBarUp() {
 // ------------------------- MAIN -----------------------------
 // Sets up our youtube player object. Assigns listeners.
 function onYouTubeIframeAPIReady() {
-	const dimensions = document.getElementById("playerSizeSelect").value.split(",");
 	player = new YT.Player('player', 
 	{
-		width: dimensions[0],
-		height: dimensions[1],
+		width: 640,
+		height: 390,
 		videoId: '',
 		events: 
 		{
@@ -167,10 +162,12 @@ function handleYoutubeSearchResult(result) {
 		result.items != null &&
 		result.items[0] != null &&
 		result.items[0].id != null) {
-		playlist[currentVideoIndex].videoId = result.items[0].id.videoId;
+		const videoId = result.items[0].id.videoId;
+		playlist[currentVideoIndex].videoId = videoId;
 		if (currentVideoIndex == -1) {
 			currentVideoIndex = 0;
-        }
+		}
+		$($("#playlistGrid").children()[currentVideoIndex]).find(".video-name").attr("data-video-id", videoId);
 		setCurrentVideo(currentVideoIndex);
 	} else {
 		// Not found. Do something?
@@ -186,42 +183,70 @@ function setCurrentVideo(index) {
     }
 }
 
-// Places playlist text into the playlistPreview element.
+// Build and show playlist UI
 function showPlaylist() {
-	var buildString = "";
-	
-	for (let i = 0; i < playlist.length; ++i) {
-		buildString = buildString + (playlist[i].searchTerm.trim()) + '\r\n';
-	}
+	// Clear old playlist
+	$("#playlistGrid").html("");
 
-	document.getElementById("playlistPreview").innerHTML = buildString;
-	showCurrentSong();
+	// Build playlist items
+	const template = $("#playlistItemTemplate").find(".playlist-item").clone(true);
+	template.removeAttr("hidden");
+	playlist.forEach(function (item, index) {
+		let videoDataNode = template.find(".video-name");
+		videoDataNode.text(item.searchTerm);
+		videoDataNode.attr("data-search-term", item.searchTerm);
+		videoDataNode.attr("data-video-id", item.videoId);
+		$("#playlistGrid").append(template[0].cloneNode(true));
+	});
+
+	// Don't really need anything dynamic if there's only one item
+	if (playlist.length > 1) {
+		// Apply Packery grid
+		$grid = $('.grid').packery({
+			itemSelector: '.playlist-item',
+			columnWidth: 140,
+			gutter: 2
+		});
+
+		// Apply Draggabilly to make all playlist-items draggable
+		$grid.find('.playlist-item').each(function (i, gridItem) {
+			var draggie = new Draggabilly(gridItem, {
+				axis: 'y',
+				handle: '.handle'
+			});
+			// Bind drag events to Packery
+			$grid.packery('bindDraggabillyEvents', draggie);
+		});
+
+		$grid.on('layoutComplete', orderItems);
+		$grid.on('dragItemPositioned', orderItems);
+    }
 }
 
-// Highlights the currently playing song in the playlistPreview element.
+function orderItems() {
+	const itemElems = $grid.packery('getItemElements');
+	$(itemElems).each(function (i, itemElem) {
+		$(itemElem).find(".video-index").text(i + 1);
+	});
+	setPlaylistFromUI();
+}
+
+function setPlaylistFromUI() {
+	playlist = [];
+	$("#playlistGrid").children().each(function (index, element) {
+		let videoInfoNode = $(element).find(".video-name");
+		let indexNode = $(element).find(".video-index");
+		let playlistIndex = parseInt(indexNode.text()) - 1;
+		playlist[playlistIndex] = {
+			searchTerm: videoInfoNode.attr("data-search-term"),
+			videoId: videoInfoNode.attr("data-video-id")
+		};
+	});
+}
+
+// Adjusts view so user can see the UI representation of the current video
 function showCurrentSong() {
-	if (currentVideoIndex >= 0 && currentVideoIndex < playlist.length) {
-		const searchTerm = playlist[currentVideoIndex].searchTerm;
-		const videoId = playlist[currentVideoIndex].videoId;
-
-		document.title = (searchTerm + " | PTPlaylist");
-		
-		const a = document.createElement('a');
-		const linkText = document.createTextNode(searchTerm + " | " + videoId);
-		a.appendChild(linkText);
-		a.title = searchTerm;
-		a.href = "https://www.youtube.com/watch?v=" + videoId;
-		document.getElementById('videoLabel').innerHTML = '';
-		document.getElementById('videoLabel').appendChild(a);
-
-		// Highlight text in preview box to show user where in the playlist we are.
-		const preview = document.getElementById("playlistPreview"); 
-		const startIndexOfVideoText = preview.value.indexOf(searchTerm);
-		const endIndexOfVideoText = startIndexOfVideoText + searchTerm.length;
-		preview.setSelectionRange(startIndexOfVideoText, endIndexOfVideoText);
-		// TODO: Goes too far if there is an entry taking up more than one line! Truncate?
-		preview.scrollTop = (currentVideoIndex) * 16; // 16 is text size plus margins in the text area. Perhaps this could be calculated...
-	}
+	// TODO: Scroll playlist container to show currently-playing video
 }
 
 // Shuffles the playlist
@@ -237,6 +262,7 @@ function shufflePlaylist() {
 function clearPlaylist() {
 	playlist = [];
 	currentVideoIndex = -1;
+	showPlaylist();
 }
 
 // Sets the size of the video player
