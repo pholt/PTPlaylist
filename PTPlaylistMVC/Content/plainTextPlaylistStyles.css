@@ -23,37 +23,71 @@ iframe {
 	margin: 0 auto;
 }
 
-.playlist-div {
+/*
+@media screen and (max-width: 600px) {
+	.column {
+		width: 100%;
+	}
+}
+*/
+
+
+.column-left {
+	float: left;
+	width: 66%;
+}
+
+.column-right {
+	float: left;
+	width: 33.3%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.playlist-input {
 	min-width: 640px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
 .grid-container {
-	width: 140px;
-	height: 150px;
+	width: 320px;
+	height: 500px;
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 .grid {
-	max-width: 120px;
+	max-width: 300px;
 }
 
-.grid-item {
-	width: 120px;
+.playlist-item {
+	width: 300px;
 	height: 60px;
-	background: #b6ff00;
+	background: #0094ff;
 	border: 2px solid black;
 }
 
-.grid-item.is-pointer-down {
+.playlist-item.options {
+	max-width: 5px;
+}
+
+.playlist-item > * {
+	overflow: hidden;
+	float: left;
+}
+
+.playlist-item.is-pointer-down {
 	background: #808080;
 	z-index: 2;
 }
 
-.grid-item:hover {
-	border-color: hsla(0, 0%, 100%, 0.5);
+.handle:hover {
 	cursor: move;
 }
 
