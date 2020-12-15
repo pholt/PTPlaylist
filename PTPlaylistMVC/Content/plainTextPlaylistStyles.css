@@ -29,6 +29,41 @@ iframe {
 	margin-bottom: 10px;
 }
 
+.grid-container {
+	width: 140px;
+	height: 150px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+.grid {
+	max-width: 120px;
+}
+
+.grid-item {
+	width: 120px;
+	height: 60px;
+	background: #b6ff00;
+	border: 2px solid black;
+}
+
+.grid-item.is-pointer-down {
+	background: #808080;
+	z-index: 2;
+}
+
+.grid-item:hover {
+	border-color: hsla(0, 0%, 100%, 0.5);
+	cursor: move;
+}
+
+.packery-drop-placeholder {
+	outline: 3px dashed hsla(0, 0%, 0%, 0.5);
+	outline-offset: -6px;
+	-webkit-transition: -webkit-transform 0.2s;
+	transition: transform 0.2s;
+}
+
 .navbar-collapse {
 	height: 80px;
 }
