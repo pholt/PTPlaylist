@@ -49,7 +49,7 @@ function onKeyUp(evt) {
 
 // Pauses/plays video when spacebar is hit.
 function onSpaceBarUp() {
-    if (player && currentVideo != null && currentVideo[1] != null) {
+    if (player) {
         const state = player.getPlayerState();
         if (state == 1) { // Is playing
             pauseVideo();
