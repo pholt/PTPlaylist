@@ -1,16 +1,16 @@
 /* 
 Complimentary: #9FEE00
 Background: #323638
-	Lighter: #0F0F0F
-	Softer: #
+    Lighter: #0F0F0F
+    Softer: #
 Text: #DBDBDB
-	Darker: #FFD300
+    Darker: #FFD300
 */
 
 *{
-	margin: 0px 0px 0px 0px;
-	padding: 0px;
-	text-align: center;
+    margin: 0px 0px 0px 0px;
+    padding: 0px;
+    text-align: center;
 }
 
 html {
@@ -19,87 +19,90 @@ html {
 }
 
 iframe {
-	text-align: center;
-	margin: 0 auto;
+    text-align: center;
+    margin: 0 auto;
 }
 
 /*
 @media screen and (max-width: 600px) {
-	.column {
-		width: 100%;
-	}
+    .column {
+        width: 100%;
+    }
 }
 */
 
-
 .column-left {
-	float: left;
-	width: 66%;
+    float: left;
+    width: 66%;
 }
 
 .column-right {
-	float: left;
-	width: 33.3%;
+    float: left;
+    width: 33.3%;
 }
 
 /* Clear floats after the columns */
 .row:after {
-	content: "";
-	display: table;
-	clear: both;
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .playlist-input {
-	min-width: 640px;
-	margin-top: 10px;
-	margin-bottom: 10px;
+    min-width: 640px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .grid-container {
-	width: 320px;
-	height: 500px;
-	overflow-x: hidden;
-	overflow-y: auto;
+    width: 320px;
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .grid {
-	max-width: 300px;
+    max-width: 300px;
 }
 
 .playlist-item {
-	width: 300px;
-	height: 60px;
-	background: #0094ff;
-	border: 2px solid black;
+    width: 300px;
+    height: 60px;
+    background: #0094ff;
+    border: 2px solid black;
 }
 
 .playlist-item.options {
-	max-width: 5px;
+    max-width: 5px;
 }
 
 .playlist-item > * {
-	overflow: hidden;
-	float: left;
+    overflow: hidden;
+    float: left;
 }
 
 .playlist-item.is-pointer-down {
-	background: #808080;
-	z-index: 2;
+    background: #808080;
+    z-index: 2;
+}
+
+.playlist-item.video-name {
+    overflow: scroll;
 }
 
 .handle:hover {
-	cursor: move;
+    cursor: move;
 }
 
 .packery-drop-placeholder {
-	outline: 3px dashed hsla(0, 0%, 0%, 0.5);
-	outline-offset: -6px;
-	-webkit-transition: -webkit-transform 0.2s;
-	transition: transform 0.2s;
+    outline: 3px dashed hsla(0, 0%, 0%, 0.5);
+    outline-offset: -6px;
+    -webkit-transition: -webkit-transform 0.2s;
+    transition: transform 0.2s;
 }
 
 .navbar-collapse {
-	height: 80px;
+    height: 80px;
 }
 
 .footer {
@@ -112,6 +115,6 @@ iframe {
 }
 
 .footer > .container {
-	margin-right:20px;
-	margin-top:15px;
+    margin-right:20px;
+    margin-top:15px;
 }

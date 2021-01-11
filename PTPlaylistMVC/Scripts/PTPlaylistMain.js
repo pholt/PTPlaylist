@@ -3,13 +3,20 @@
 // TODO: Scrolling with spacebar still happening
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
-var player;                     // Object handling youtube video player usage.
+var player;                        // Object handling youtube video player usage.
 var playlist = [];                 // List of {searchTerm, videoId} objects for the player to play.
-var currentVideoIndex = -1;     // Index of the currently-cued videoId, set to -1 when nothing is cued.
-var $grid;                        // Packery grid.
+var currentVideoIndex = -1;        // Index of the currently-cued videoId, set to -1 when nothing is cued.
+var packeryGrid;                   // Packery grid.
 
 // ------------------------- DOCUMENT FUNCTIONS -----------------------------
 $(function () {
+    packeryGrid = $('.grid').packery({
+        itemSelector: '.playlist-item',
+        columnWidth: 140,
+        gutter: 2
+    });
+
+    packeryGrid.on('dragItemPositioned', orderItems);
     document.getElementById("query").readOnly = false;
 
     // Add listener for spacebar: pauses or plays video.
@@ -186,7 +193,7 @@ function setCurrentVideo(index) {
 // Build and show playlist UI
 function showPlaylist() {
     // Clear old playlist
-    $("#playlistGrid").html("");
+    packeryGrid.packery('remove', $(".playlist-item"));
 
     // Build playlist items
     const template = $("#playlistItemTemplate").find(".playlist-item").clone(true);
@@ -196,53 +203,51 @@ function showPlaylist() {
         videoDataNode.text(item.searchTerm);
         videoDataNode.attr("data-search-term", item.searchTerm);
         videoDataNode.attr("data-video-id", item.videoId);
-        $("#playlistGrid").append(template[0].cloneNode(true));
+        videoDataNode.attr("data-video-index", index);
+        let completeNode = template[0].cloneNode(true);
+        packeryGrid.append(completeNode).packery('appended', completeNode);
     });
 
     // Don't really need anything dynamic if there's only one item
     if (playlist.length > 1) {
-        // Apply Packery grid
-        $grid = $('.grid').packery({
-            itemSelector: '.playlist-item',
-            columnWidth: 140,
-            gutter: 2
-        });
+        packeryGrid.packery();
 
         // Apply Draggabilly to make all playlist-items draggable
-        $grid.find('.playlist-item').each(function (i, gridItem) {
-            var draggie = new Draggabilly(gridItem, {
+        packeryGrid.find('.playlist-item').each(function (i, gridItem) {
+            let draggie = new Draggabilly(gridItem, {
                 axis: 'y',
                 handle: '.handle'
             });
-            // Bind drag events to Packery
-            $grid.packery('bindDraggabillyEvents', draggie);
-        });
 
-        // TODO: Bug here blows out playlist data when adding videos
-        // $grid.on('layoutComplete', orderItems);
-        $grid.on('dragItemPositioned', orderItems);
+            // Bind drag events to Packery
+            packeryGrid.packery('bindDraggabillyEvents', draggie);
+        });
     }
 }
 
+// Dragging elements around doesn't change their index position within the container.
+// So apply index manually here. Also, currentIndex may need to change.
 function orderItems() {
-    const itemElems = $grid.packery('getItemElements');
-    $(itemElems).each(function (i, itemElem) {
-        $(itemElem).find(".video-index").text(i + 1);
+    const itemElems = packeryGrid.packery('getItemElements');
+    const currentVideoElement = itemElems.filter(item => item.children[2].getAttribute("data-video-index") === currentVideoIndex + "")[0];
+    $(itemElems).each(function (index, itemElem) {
+        $(itemElem).find(".video-name").attr("data-video-index", index);
     });
-    setPlaylistFromUI();
+    setPlaylistFromUI(currentVideoElement);
 }
 
-function setPlaylistFromUI() {
+// Rebuild playlist from changes in the UI.
+function setPlaylistFromUI(currentVideoElement) {
     playlist = [];
     $("#playlistGrid").children().each(function (index, element) {
         let videoInfoNode = $(element).find(".video-name");
-        let indexNode = $(element).find(".video-index");
-        let playlistIndex = parseInt(indexNode.text()) - 1;
+        let playlistIndex = parseInt(videoInfoNode.attr("data-video-index"));
         playlist[playlistIndex] = {
             searchTerm: videoInfoNode.attr("data-search-term"),
             videoId: videoInfoNode.attr("data-video-id")
         };
     });
+    currentVideoIndex = parseInt(currentVideoElement.children[2].getAttribute("data-video-index"));
 }
 
 // Adjusts view so user can see the UI representation of the current video
@@ -409,4 +414,13 @@ function cueYoutubeVideo(video) {
             queryForVideoId(video.searchTerm);
         }
     }
+}
+
+function exportPlaylistToText() {
+    const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
+    const delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = /\n/ : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value;
+    navigator.clipboard.writeText(playlist.map(item => item.searchTerm).join(delimiter)).then(
+        function () { console.log("Wrote playlist to clipboard."); }, // Success
+        function () { console.log("Failed to write playlist to clipboard."); } // Failure
+    );
 }
