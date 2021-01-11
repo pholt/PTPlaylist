@@ -129,11 +129,11 @@ function search() {
         const previousSection = playlist.slice(0, currentVideoIndex + 1);
         const laterSection = playlist.slice(currentVideoIndex + 1);
         playlist = previousSection.concat(videosToBeAdded, laterSection);
+        showPlaylist();
     } else {
         playlist = playlist.concat(videosToBeAdded);
+        appendToPlaylistUI(videosToBeAdded);
     }
-
-    showPlaylist();
 
     if (currentVideoIndex == -1) { // If we haven't been told to play a video ever...
         // Attempt to play a video
@@ -192,20 +192,24 @@ function setCurrentVideo(index) {
 
 // Build and show playlist UI
 function showPlaylist() {
-    // Clear old playlist
+    // Rebuild playlist by removing all elements and re-adding from playlist data object.
     packeryGrid.packery('remove', $(".playlist-item"));
+    appendToPlaylistUI(playlist);
+}
 
+// Add videos to the end of the playlist UI
+function appendToPlaylistUI(videos) {
     // Build playlist items
     const template = $("#playlistItemTemplate").find(".playlist-item").clone(true);
     template.removeAttr("hidden");
-    playlist.forEach(function (item, index) {
+    videos.forEach(function (item, index) {
         let videoDataNode = template.find(".video-name");
         videoDataNode.text(item.searchTerm);
         videoDataNode.attr("data-search-term", item.searchTerm);
         videoDataNode.attr("data-video-id", item.videoId);
         videoDataNode.attr("data-video-index", index);
         let completeNode = template[0].cloneNode(true);
-        packeryGrid.append(completeNode).packery('appended', completeNode);
+        packeryGrid.append(completeNode).packery('addItems', completeNode);
     });
 
     // Don't really need anything dynamic if there's only one item
