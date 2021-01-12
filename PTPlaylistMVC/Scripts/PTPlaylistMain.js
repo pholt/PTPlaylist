@@ -237,6 +237,7 @@ function orderItems() {
     $(itemElems).each(function (index, itemElem) {
         $(itemElem).find(".video-name").attr("data-video-index", index);
     });
+
     setPlaylistFromUI(currentVideoElement);
 }
 
@@ -251,7 +252,10 @@ function setPlaylistFromUI(currentVideoElement) {
             videoId: videoInfoNode.attr("data-video-id")
         };
     });
-    currentVideoIndex = parseInt(currentVideoElement.children[2].getAttribute("data-video-index"));
+
+    if (currentVideoElement) {
+        currentVideoIndex = parseInt(currentVideoElement.children[2].getAttribute("data-video-index"));
+    }
 }
 
 // Adjusts view so user can see the UI representation of the current video
@@ -366,7 +370,7 @@ function nextVideo() {
     if (player) {
         currentVideoIndex++;
 
-        if (currentVideoIndex >= 0 && currentVideoIndex < playlist.length) {
+        if (isIndexInBounds(currentVideoIndex)) {
             cueYoutubeVideo(playlist[currentVideoIndex]);
         }
     }
@@ -374,9 +378,9 @@ function nextVideo() {
 
 function previousVideo() {
     if (player) {
-        currentVideoIndex--;
+        --currentVideoIndex;
 
-        if (currentVideoIndex >= 0) {
+        if (isIndexInBounds(currentVideoIndex)) {
             cueYoutubeVideo(playlist[currentVideoIndex]);
         } else {
             currentVideoIndex = -1;
@@ -393,7 +397,7 @@ function restartPlaylist() {
 }
 
 function removeVideoFromPlaylist(index) {
-    if (player && playlist != null && index >= 0 && index < playlist.length) {
+    if (player && playlist != null && isIndexInBounds(index)) {
         playlist.splice(index);
 
         if (index < currentVideoIndex) {
@@ -418,6 +422,10 @@ function cueYoutubeVideo(video) {
             queryForVideoId(video.searchTerm);
         }
     }
+}
+
+function isIndexInBounds(index) {
+    return index >= 0 && index < playlist.length; 
 }
 
 function exportPlaylistToText() {
