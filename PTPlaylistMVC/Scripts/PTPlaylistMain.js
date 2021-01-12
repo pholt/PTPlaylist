@@ -174,7 +174,9 @@ function handleYoutubeSearchResult(result) {
         if (currentVideoIndex == -1) {
             currentVideoIndex = 0;
         }
-        $($("#playlistGrid").children()[currentVideoIndex]).find(".video-name").attr("data-video-id", videoId);
+        // Set videoId in UI element
+        const elementInUI = packeryGrid.packery('getItemElements').filter(item => $(item).find(".video-name").attr("data-video-index") === currentVideoIndex + "")[0];
+        $(elementInUI).find(".video-name").attr("data-video-id", videoId);
         setCurrentVideo(currentVideoIndex);
     } else {
         // Not found. Do something?
@@ -233,7 +235,7 @@ function appendToPlaylistUI(videos) {
 // So apply index manually here. Also, currentIndex may need to change.
 function orderItems() {
     const itemElems = packeryGrid.packery('getItemElements');
-    const currentVideoElement = itemElems.filter(item => item.children[2].getAttribute("data-video-index") === currentVideoIndex + "")[0];
+    const currentVideoElement = itemElems.filter(item => $(item).find(".video-name").attr("data-video-index") === currentVideoIndex + "")[0];
     $(itemElems).each(function (index, itemElem) {
         $(itemElem).find(".video-name").attr("data-video-index", index);
     });
@@ -254,7 +256,7 @@ function setPlaylistFromUI(currentVideoElement) {
     });
 
     if (currentVideoElement) {
-        currentVideoIndex = parseInt(currentVideoElement.children[2].getAttribute("data-video-index"));
+        currentVideoIndex = parseInt($(currentVideoElement).find(".video-name").attr("data-video-index"));
     }
 }
 
