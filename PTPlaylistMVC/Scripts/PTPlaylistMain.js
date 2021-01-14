@@ -445,7 +445,7 @@ function mock(times = 1) {
         },
         {
             searchTerm: "U.R.F. Theme Song 2015 (League of Legends) Welcome to Planet U.R.F.",
-            videoId: "xo9NgEG-7Tc"
+            videoId: "qYIiy03eGE0"
         },
         {
             searchTerm: "Undertale OST: 053 - Stronger Monsters",
