@@ -16,7 +16,7 @@ $(function () {
         gutter: 2
     });
 
-    packeryGrid.on('dragItemPositioned', orderItems);
+    packeryGrid.on('layoutComplete', orderItems);
     document.getElementById("query").readOnly = false;
 
     // Add listener for spacebar: pauses or plays video.
