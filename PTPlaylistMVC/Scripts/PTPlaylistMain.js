@@ -12,7 +12,6 @@ var packeryGrid;                   // Packery grid.
 $(function () {
     packeryGrid = $('.grid').packery({
         itemSelector: '.playlist-item',
-        columnWidth: 140,
         gutter: 2
     });
 
@@ -214,21 +213,18 @@ function appendToPlaylistUI(videos) {
         packeryGrid.append(completeNode).packery('addItems', completeNode);
     });
 
-    // Don't really need anything dynamic if there's only one item
-    if (playlist.length > 1) {
-        packeryGrid.packery();
+    packeryGrid.packery();
 
-        // Apply Draggabilly to make all playlist-items draggable
-        packeryGrid.find('.playlist-item').each(function (i, gridItem) {
-            let draggie = new Draggabilly(gridItem, {
-                axis: 'y',
-                handle: '.handle'
-            });
-
-            // Bind drag events to Packery
-            packeryGrid.packery('bindDraggabillyEvents', draggie);
+    // Apply Draggabilly to make all playlist-items draggable
+    packeryGrid.find('.playlist-item').each(function (i, gridItem) {
+        let draggie = new Draggabilly(gridItem, {
+            axis: 'y',
+            handle: '.handle'
         });
-    }
+
+        // Bind drag events to Packery
+        packeryGrid.packery('bindDraggabillyEvents', draggie);
+    });
 }
 
 // Dragging elements around doesn't change their index position within the container.
@@ -437,4 +433,36 @@ function exportPlaylistToText() {
         function () { console.log("Wrote playlist to clipboard."); }, // Success
         function () { console.log("Failed to write playlist to clipboard."); } // Failure
     );
+}
+
+// Testing function to create mock playlist.
+// Adds n items (default 1) to the playlist. Prepends a number to the search term text to make items easier to track.
+function mock(times = 1) {
+    const mockPlaylistItems = [
+        {
+            searchTerm: "Donkey Kong Country 2 - In A Snow-Bound Land SNES -extended",
+            videoId: "xo9NgEG-7Tc"
+        },
+        {
+            searchTerm: "U.R.F. Theme Song 2015 (League of Legends) Welcome to Planet U.R.F.",
+            videoId: "xo9NgEG-7Tc"
+        },
+        {
+            searchTerm: "Undertale OST: 053 - Stronger Monsters",
+            videoId: "HnmHqWU0z5M"
+        }
+    ];
+
+    playlist = [];
+
+    for (let i = 0; i < times; ++i) {
+        let mod3 = i % 3;
+        let itemBase = mockPlaylistItems[mod3];
+        playlist.push({
+            searchTerm: i + " " + itemBase.searchTerm,
+            videoId: itemBase.videoId
+        });
+    }
+
+    showPlaylist();
 }
