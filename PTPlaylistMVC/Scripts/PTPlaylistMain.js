@@ -232,8 +232,8 @@ function appendToPlaylistUI(videos) {
     });
 }
 
-// Dragging elements around doesn't change their index position within the container.
-// So apply index manually here. Also, currentIndex may need to change.
+// Dragging elements around doesn't change their index position within the container, 
+// so apply index manually and update currentIndex.
 function orderItems() {
     const itemElems = packeryGrid.packery('getItemElements');
     const currentVideoElement = itemElems.filter(item => $(item).find(".video-name").attr("data-video-index") === currentVideoIndex + "")[0];
@@ -263,7 +263,7 @@ function setPlaylistFromUI(currentVideoElement) {
 
 // Adjusts view so user can see the UI representation of the current video
 function showCurrentSong() {
-    // TODO: Scroll playlist container to show currently-playing video
+    // TODO: Scroll playlist container to show currently-playing video and highlight playlist item in UI
 }
 
 // Shuffles the playlist
@@ -343,6 +343,10 @@ function logDictionary(dictionary) {
             console.log(key + "->" + dictionary[key]);
         }
     }
+}
+
+function isIndexInBounds(index) {
+    return index >= 0 && index < playlist.length;
 }
 
 // ------------------------- YOUTUBE VIDEO PLAYER FUNCTIONS -----------------------------
@@ -427,9 +431,7 @@ function cueYoutubeVideo(video) {
     }
 }
 
-function isIndexInBounds(index) {
-    return index >= 0 && index < playlist.length; 
-}
+// ------------------------- TESTING FUNCTIONS -----------------------------
 
 function exportPlaylistToText() {
     const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
