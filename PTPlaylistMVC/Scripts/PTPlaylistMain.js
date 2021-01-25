@@ -191,7 +191,7 @@ function handleYoutubeSearchResult(result) {
 
 // Sets the currentVideo to the video in the playlist with the given index
 function setCurrentVideo(index) {
-    if (index >= 0 && index < playlist.length) {
+    if (isIndexInBounds(index)) {
         currentVideoIndex = index;
         cueYoutubeVideo(playlist[currentVideoIndex]);
     }
@@ -409,14 +409,14 @@ function removeVideoFromPlaylist(index) {
         packeryGrid.packery('remove', $(elementToRemove)).packery('shiftLayout');
         console.log("Removed element from packery.");
 
+        orderItems();
+
         if (index < currentVideoIndex) {
             currentVideoIndex--;
         } else if (currentVideoIndex == index) {
             // Plays the next song
             cueYoutubeVideo(playlist[currentVideoIndex]);
         }
-
-        orderItems();
     } else {
         console.log("Tried to remove video with index " + index + ", but legal indices are between 0 and " + (playlist.length - 1));
     }
