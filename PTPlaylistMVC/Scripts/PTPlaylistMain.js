@@ -22,6 +22,7 @@ $(function () {
 
     packeryGrid.on('layoutComplete', orderItems);
     document.getElementById("query").readOnly = false;
+    $("#copyPlaylistButton").on('click', exportPlaylistToText);
 
     // Add listener for spacebar: pauses or plays video.
     if (document.addEventListener) {
@@ -279,7 +280,7 @@ function shufflePlaylist() {
 function clearPlaylist() {
     playlist = [];
     currentVideoIndex = -1;
-    showPlaylist();
+    packeryGrid.packery('remove', $(".playlist-item"));
 }
 
 // Sets the size of the video player
@@ -406,6 +407,7 @@ function restartPlaylist() {
 function removeVideoFromPlaylist(index) {
     if (player && playlist != null && isIndexInBounds(index)) {
         playlist.splice(index);
+        // TODO: Remove from UI as well
 
         if (index < currentVideoIndex) {
             currentVideoIndex--;
