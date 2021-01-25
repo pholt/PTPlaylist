@@ -237,7 +237,8 @@ function appendToPlaylistUI(videos) {
 // so apply index manually and update currentIndex.
 function orderItems() {
     const itemElems = packeryGrid.packery('getItemElements');
-    const currentVideoElement = itemElems.filter(item => $(item).find(".video-name").attr("data-video-index") === currentVideoIndex + "")[0];
+    // Get current UI element before we apply new indices
+    const currentVideoElement = getPlaylistElementAtIndex(currentVideoIndex);
     $(itemElems).each(function (index, itemElem) {
         $(itemElem).find(".video-name").attr("data-video-index", index);
     });
@@ -283,6 +284,13 @@ function clearPlaylist() {
     packeryGrid.packery('remove', $(".playlist-item"));
 }
 
+function getPlaylistElementAtIndex(index) {
+    if (index === undefined) {
+        index = currentVideoIndex;
+    }
+    return packeryGrid.packery('getItemElements').filter(item => $(item).find(".video-name").attr("data-video-index") === index + "")[0];
+}
+
 // Sets the size of the video player
 // Minimum height and width are 180 x 180 according to YouTube API usage requirements
 function setPlayerSize(width, height) {
@@ -295,6 +303,15 @@ function setPlayerSize(width, height) {
     }
 
     player.setSize(width, height);
+}
+
+function exportPlaylistToText() {
+    const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
+    const delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = /\n/ : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value;
+    navigator.clipboard.writeText(playlist.map(item => item.searchTerm).join(delimiter)).then(
+        function () { console.log("Wrote playlist to clipboard."); }, // Success
+        function () { console.log("Failed to write playlist to clipboard."); } // Failure
+    );
 }
 
 // ------------------------- UTILITIES -----------------------------
@@ -316,26 +333,6 @@ function shuffleArray(a, callback) {
         callback();
     }
 }
-
-/*
-// Shuffles two arrays
-function shuffleParallelArrays(a, b)
-{
-    if (a.length != b.length) return;
-    
-    var j, x, y, i;
-    for (i = a.length; i; i--) 
-    {
-        j = Math.floor(Math.random() * i);
-        x = a[i - 1];
-        y = b[i - 1];
-        a[i - 1] = a[j];
-        b[i - 1] = b[j];
-        a[j] = x;
-        b[j] = y;
-    }
-}
-*/
 
 // Outputs the contents of a dictionary structure to console.
 function logDictionary(dictionary) {
@@ -405,9 +402,12 @@ function restartPlaylist() {
 }
 
 function removeVideoFromPlaylist(index) {
-    if (player && playlist != null && isIndexInBounds(index)) {
-        playlist.splice(index);
-        // TODO: Remove from UI as well
+    console.log("Removing video at index " + index);
+    if (player && playlist.length > 0 && isIndexInBounds(index)) {
+        // Remove from playlist UI
+        const elementToRemove = getPlaylistElementAtIndex(index);
+        packeryGrid.packery('remove', $(elementToRemove)).packery('shiftLayout');
+        console.log("Removed element from packery.");
 
         if (index < currentVideoIndex) {
             currentVideoIndex--;
@@ -416,8 +416,9 @@ function removeVideoFromPlaylist(index) {
             cueYoutubeVideo(playlist[currentVideoIndex]);
         }
 
+        orderItems();
     } else {
-        console.log("Tried to remove song with index " + index + ", but legal indices are between 0 and " + playlist.length - 1);
+        console.log("Tried to remove video with index " + index + ", but legal indices are between 0 and " + (playlist.length - 1));
     }
 }
 
@@ -434,15 +435,6 @@ function cueYoutubeVideo(video) {
 }
 
 // ------------------------- TESTING FUNCTIONS -----------------------------
-
-function exportPlaylistToText() {
-    const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
-    const delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = /\n/ : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value;
-    navigator.clipboard.writeText(playlist.map(item => item.searchTerm).join(delimiter)).then(
-        function () { console.log("Wrote playlist to clipboard."); }, // Success
-        function () { console.log("Failed to write playlist to clipboard."); } // Failure
-    );
-}
 
 // Testing function to create mock playlist.
 // Adds n items (default 1) to the playlist. Prepends a number to the search term text to make items easier to track.
