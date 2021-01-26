@@ -264,8 +264,11 @@ function setPlaylistFromUI(currentVideoElement) {
 }
 
 // Adjusts view so user can see the UI representation of the current video
-function showCurrentSong() {
-    // TODO: Scroll playlist container to show currently-playing video and highlight playlist item in UI
+function showCurrentVideoElement() {
+    // TODO: Highlight current playlist item in UI (and un-highlight non-playing items)
+    if (isIndexInBounds(currentVideoIndex)) {
+        getPlaylistElementAtIndex(currentVideoIndex).scrollIntoView();
+    }
 }
 
 // Shuffles the playlist
@@ -359,7 +362,7 @@ function stopVideo() {
 // Internal function for playing currently queued video.
 function playVideo() {
     if (player) {
-        showCurrentSong();
+        showCurrentVideoElement();
         player.playVideo();
     }
 }
@@ -377,6 +380,7 @@ function nextVideo() {
 
         if (isIndexInBounds(currentVideoIndex)) {
             cueYoutubeVideo(playlist[currentVideoIndex]);
+            showCurrentVideoElement();
         }
     }
 }
