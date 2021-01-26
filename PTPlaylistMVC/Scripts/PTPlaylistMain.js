@@ -265,10 +265,17 @@ function setPlaylistFromUI(currentVideoElement) {
 
 // Adjusts view so user can see the UI representation of the current video
 function showCurrentVideoElement() {
-    // TODO: Highlight current playlist item in UI (and un-highlight non-playing items)
+    // Scroll video into view
     if (isIndexInBounds(currentVideoIndex)) {
         getPlaylistElementAtIndex(currentVideoIndex).scrollIntoView();
     }
+
+    // Highlight current playlist item in UI (and un-highlight non-playing items)
+    $(".playlist-item").each(function () {
+        const element = $(this);
+        const elementIndex = parseInt(element.find(".video-name").attr("data-video-index"));
+        element.toggleClass("playing", elementIndex === currentVideoIndex);
+    });
 }
 
 // Shuffles the playlist
