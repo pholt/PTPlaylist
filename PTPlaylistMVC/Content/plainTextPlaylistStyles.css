@@ -94,6 +94,10 @@ iframe {
     overflow: scroll;
 }
 
+.playlist-item.playing { 
+    background: #4800ff;
+}
+
 .handle:hover {
     cursor: move;
 }
