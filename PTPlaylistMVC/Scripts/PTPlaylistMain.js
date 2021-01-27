@@ -23,6 +23,7 @@ $(function () {
     packeryGrid.on('layoutComplete', orderItems);
     document.getElementById("query").readOnly = false;
     $("#copyPlaylistButton").on('click', exportPlaylistToText);
+    $("#playlistGrid").on('click', playlistGridDelegate);
 
     // Add listener for spacebar: pauses or plays video.
     if (document.addEventListener) {
@@ -225,7 +226,7 @@ function appendToPlaylistUI(videos) {
     packeryGrid.find('.playlist-item').each(function (i, gridItem) {
         let draggie = new Draggabilly(gridItem, {
             axis: 'y',
-            handle: '.handle'
+            handle: '.video-handle'
         });
 
         // Bind drag events to Packery
@@ -322,6 +323,17 @@ function exportPlaylistToText() {
         function () { console.log("Wrote playlist to clipboard."); }, // Success
         function () { console.log("Failed to write playlist to clipboard."); } // Failure
     );
+}
+
+function playlistGridDelegate(event) {
+    const target = event.target;
+    if (target.className === "play") {
+        console.log("Play button clicked.");
+    } else if (target.className === "pause") {
+        console.log("Pause button clicked.");
+    } else if (target.className === "video-remove-button") {
+        console.log("Remove button clicked.");
+    }
 }
 
 // ------------------------- UTILITIES -----------------------------
