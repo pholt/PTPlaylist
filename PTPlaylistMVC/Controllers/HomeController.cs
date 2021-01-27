@@ -15,5 +15,7 @@ namespace PTPlaylistMVC.Controllers
             ViewBag.API_KEY = API_KEY;
             return View();
         }
+
+        // TODO: API action to get YouTube video ID from first result. Currently this is handled through js, but should instead be handled through server calls
     }
 }
