@@ -64,8 +64,8 @@ iframe {
 .grid {
     min-width: 100px;
     max-width: 700px;
-    min-height: 720px;
-    max-height: 720px;
+    min-height: 650px;
+    max-height: 650px;
 }
 
 .playlist-item {

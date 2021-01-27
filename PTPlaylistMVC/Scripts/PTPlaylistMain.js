@@ -20,7 +20,7 @@ $(function () {
         gutter: 2
     });
 
-    packeryGrid.on('layoutComplete', orderItems);
+    packeryGrid.on('dragItemPositioned', orderItems);
     document.getElementById("query").readOnly = false;
     $("#copyPlaylistButton").on('click', exportPlaylistToText);
     $("#playlistGrid").on('click', playlistGridDelegate);
@@ -101,10 +101,15 @@ Data enum for possible values of "event.data":
     5 = video cued
 */
 function onPlayerStateChange(event) {
-    if (event.data == 0) {
-        nextVideo();
-    } else if (event.data == 5) {
-        playVideo();
+    if (isIndexInBounds(currentVideoIndex)) {
+        if (event.data == 0) {
+            nextVideo();
+        } else if (event.data == 5) {
+            playVideo();
+        }
+    } else {
+        player.stopVideo();
+        showCurrentVideoElement();
     }
 }
 
@@ -237,6 +242,7 @@ function appendToPlaylistUI(videos) {
 // Dragging elements around doesn't change their index position within the container, 
 // so apply index manually and update currentIndex.
 function orderItems() {
+    console.log("Re-indexing items...");
     const itemElems = packeryGrid.packery('getItemElements');
     // Get current UI element before we apply new indices
     const currentVideoElement = getPlaylistElementAtIndex(currentVideoIndex);
@@ -333,12 +339,23 @@ function exportPlaylistToText() {
     );
 }
 
+// Handles play/pause/remove buttons on playlist items.
+// TODO: Probably should refactor individual actions...
 function playlistGridDelegate(event) {
     const target = event.target;
     let parentElement = $(target);
-    while (!parentElement.hasClass("playlist-item")) {
-        parentElement = parentElement.parent();
+    for (let i = 0; i < 3; ++i) { // TODO: This is a hack! 
+        if (parentElement.hasClass("playlist-item")) {
+            break;
+        } else {
+            parentElement = parentElement.parent();
+        }
     }
+
+    if (!parentElement.hasClass("playlist-item")) {
+        return;
+    }
+
     const index = parseInt(parentElement.find(".video-name").attr("data-video-index"));
 
     if (target.className === "play") {
@@ -354,7 +371,7 @@ function playlistGridDelegate(event) {
         target.classList.remove("pause");
         target.classList.add("play");
     } else if (target.className === "video-remove-button") {
-        console.log("Remove button clicked.");
+        removeVideoFromPlaylist(index);
     }
 }
 
@@ -396,6 +413,7 @@ function isIndexInBounds(index) {
 // Internal function for stopping player video.
 function stopVideo() {
     if (player) {
+        currentVideoIndex = -1;
         player.stopVideo();
     }
 }
@@ -433,7 +451,6 @@ function previousVideo() {
             cueYoutubeVideo(playlist[currentVideoIndex]);
             showCurrentVideoElement();
         } else {
-            currentVideoIndex = -1;
             stopVideo();
         }
     }
@@ -447,20 +464,15 @@ function restartPlaylist() {
 }
 
 function removeVideoFromPlaylist(index) {
-    console.log("Removing video at index " + index);
     if (player && playlist.length > 0 && isIndexInBounds(index)) {
         // Remove from playlist UI
         const elementToRemove = getPlaylistElementAtIndex(index);
         packeryGrid.packery('remove', $(elementToRemove)).packery('shiftLayout');
-        console.log("Removed element from packery.");
 
-        orderItems();
-
-        if (index < currentVideoIndex) {
-            currentVideoIndex--;
-        } else if (currentVideoIndex == index) {
-            // Plays the next song
-            cueYoutubeVideo(playlist[currentVideoIndex]);
+        const playNextVideo = index === currentVideoIndex;
+        orderItems(); // This will set currentVideoIndex to the correct value
+        if (playNextVideo) {
+            setCurrentVideo(currentVideoIndex);
         }
     } else {
         console.log("Tried to remove video with index " + index + ", but legal indices are between 0 and " + (playlist.length - 1));
