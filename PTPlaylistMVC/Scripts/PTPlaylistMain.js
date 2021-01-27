@@ -276,6 +276,14 @@ function showCurrentVideoElement() {
         const element = $(this);
         const elementIndex = parseInt(element.find(".video-name").attr("data-video-index"));
         element.toggleClass("playing", elementIndex === currentVideoIndex);
+        const playButtonElement = element.find(".video-play-button-container :first-child");
+        if (elementIndex === currentVideoIndex) { 
+            playButtonElement.removeClass("play");
+            playButtonElement.addClass("pause");
+        } else {
+            playButtonElement.removeClass("pause");
+            playButtonElement.addClass("play");
+        }
     });
 }
 
@@ -327,10 +335,24 @@ function exportPlaylistToText() {
 
 function playlistGridDelegate(event) {
     const target = event.target;
+    let parentElement = $(target);
+    while (!parentElement.hasClass("playlist-item")) {
+        parentElement = parentElement.parent();
+    }
+    const index = parseInt(parentElement.find(".video-name").attr("data-video-index"));
+
     if (target.className === "play") {
-        console.log("Play button clicked.");
+        if (currentVideoIndex === index) { // This video is already cued and playing
+            playVideo();
+        } else { // This video is not cued, cue it and play it
+            setCurrentVideo(index);
+        }
+        target.classList.remove("play");
+        target.classList.add("pause");
     } else if (target.className === "pause") {
-        console.log("Pause button clicked.");
+        pauseVideo();
+        target.classList.remove("pause");
+        target.classList.add("play");
     } else if (target.className === "video-remove-button") {
         console.log("Remove button clicked.");
     }
@@ -381,7 +403,6 @@ function stopVideo() {
 // Internal function for playing currently queued video.
 function playVideo() {
     if (player) {
-        showCurrentVideoElement();
         player.playVideo();
     }
 }
@@ -410,6 +431,7 @@ function previousVideo() {
 
         if (isIndexInBounds(currentVideoIndex)) {
             cueYoutubeVideo(playlist[currentVideoIndex]);
+            showCurrentVideoElement();
         } else {
             currentVideoIndex = -1;
             stopVideo();
@@ -450,6 +472,7 @@ function cueYoutubeVideo(video) {
     if (player && video !== null) {
         if (video.videoId) {
             player.cueVideoById(video.videoId, 0, "large");
+            showCurrentVideoElement();
         } else {
             stopVideo();
             queryForVideoId(video.searchTerm);
