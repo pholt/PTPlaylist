@@ -146,9 +146,10 @@ function search() {
         appendToPlaylistUI(videosToBeAdded);
     }
 
-    if (currentVideoIndex == -1) { // If we haven't been told to play a video ever...
+    if (currentVideoIndex === -1 && playlist.length > 0) { // If we haven't been told to play a video ever...
         // Attempt to play a video
-        nextVideo();
+        currentVideoIndex = 0;
+        setCurrentVideo(currentVideoIndex);
     }
 
     $('#query').val(""); // Clear input field so users don't accidentally add the same input twice.
@@ -181,10 +182,10 @@ function handleYoutubeSearchResult(result) {
         result.items[0] != null &&
         result.items[0].id != null) {
         const videoId = result.items[0].id.videoId;
-        playlist[currentVideoIndex].videoId = videoId;
-        if (currentVideoIndex == -1) {
+        if (currentVideoIndex === -1) {
             currentVideoIndex = 0;
         }
+        playlist[currentVideoIndex].videoId = videoId;
         // Set videoId in UI element
         const elementInUI = packeryGrid.packery('getItemElements').filter(item => $(item).find(".video-name").attr("data-video-index") === currentVideoIndex + "")[0];
         $(elementInUI).find(".video-name").attr("data-video-id", videoId);
