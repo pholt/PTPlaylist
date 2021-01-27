@@ -17,16 +17,6 @@
         </div>
         <div id="player" class=""></div>
 
-        <div id="playerButtons" class="playlist-div">
-            <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
-            <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
-        </div>
-
-        <div id="playlistButtons" class="playlist-div">
-            <button id="shuffle-button" onclick="shufflePlaylist()">Shuffle Playlist</button>
-            <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
-        </div>
-
         <div id="inputArea" class="playlist-input">
             <label>
                 <textarea id="query" rows="5" cols="120" type="text">Insert list of YouTube things here!</textarea>
@@ -65,6 +55,17 @@
         </div>
         <div id="playlistContainer" class="grid-container">
             <div id="playlistGrid" class="grid">
+            </div>
+        </div>
+        <div class="playlist-div">
+            <div id="playerButtons" class="playlist-div">
+                <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
+                <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
+            </div>
+
+            <div id="playlistButtons" class="playlist-div">
+                <button id="shuffle-button" onclick="shufflePlaylist()">Shuffle Playlist</button>
+                <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
             </div>
         </div>
     </div>
