@@ -70,37 +70,84 @@ iframe {
 
 .playlist-item {
     width: 100%;
-    margin-right: 20px;
     height: 60px;
     background: #0094ff;
     border: 2px solid black;
 }
 
-.playlist-item.options {
-    max-width: 5px;
-}
+    .playlist-item > * {
+        float: left;
+    }
 
-.playlist-item > * {
-    overflow: hidden;
-    float: left;
-}
+    .playlist-item.is-pointer-down {
+        background: #808080;
+        z-index: 2;
+    }
 
-.playlist-item.is-pointer-down {
-    background: #808080;
-    z-index: 2;
-}
+    .playlist-item > video-name {
+        overflow: scroll;
+        width: auto;
+    }
 
-.playlist-item.video-name {
-    overflow: scroll;
-}
+    .playlist-item.playing { 
+        background: #4800ff;
+    }
 
-.playlist-item.playing { 
-    background: #4800ff;
-}
+    .playlist-item > .video-handle {
+        width: 12px;
+        height: 56px;
+        line-height: 16px;
+        text-align: center;
+        background: #808080;
+        color: black;
+    }
 
-.handle:hover {
-    cursor: move;
-}
+        .playlist-item > .video-handle:hover {
+                cursor: move;
+            }
+
+    .playlist-item > .video-play-button-container {
+        width: 30px;
+        height: 56px;
+        text-align: center;
+        line-height: 56px;
+    }
+
+        .playlist-item > .video-play-button-container > .play {
+            margin: auto;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-style: solid;
+            border-width: 12px 0px 12px 24px;
+            border-color: transparent transparent transparent white;
+            translate: 2px 17px;
+        }
+
+        .playlist-item > .video-play-button-container > .pause {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-style: double;
+            border-width: 0px 0px 0px 12px;
+            border-color: white;
+            translate: 8px 17px;
+        }
+
+    /* https://css-tricks.com/vertically-center-multi-lined-text/ */
+    .playlist-item > .video-name {
+        height: 56px;
+        width: 85%;
+        min-width: 260px;
+        overflow: hidden;
+    }
+
+    .playlist-item > .video-remove-button {
+        cursor: pointer;
+        width: 12px;
+        height: 20px;
+        color: red;
+    }
 
 .packery-drop-placeholder {
     outline: 3px dashed hsla(0, 0%, 0%, 0.5);
