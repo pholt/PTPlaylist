@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace PTPlaylistMVC.Controllers
@@ -10,16 +9,24 @@ namespace PTPlaylistMVC.Controllers
     [Route("api/data")]
     public class DataController : ApiController
     {
-        // GET api/<controller>
-        public string Get()
-        {
-            return "not what you want";
-        }
+        private static readonly string API_KEY = System.Web.Configuration.WebConfigurationManager.AppSettings["API_KEY"];
+        private static readonly HttpClient client = new HttpClient();
 
-        // GET api/<controller>/q
-        public string Get(string query)
+        // GET api/data/{query}
+        public async Task<string> GetAsync(string query)
         {
-            return "a value";
+            string urlBase = "https://www.googleapis.com/youtube/v3/search?key={0}&q={1}&part=snippet&maxResults=1&safeSearch=none&type=video&videoEmbeddable=true";
+            string formattedUrl = String.Format(urlBase, API_KEY, HttpUtility.UrlEncode(query));
+
+            try
+            {
+                string response = await client.GetStringAsync(formattedUrl);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
         }
     }
 }

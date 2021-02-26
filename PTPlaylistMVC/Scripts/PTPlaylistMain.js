@@ -160,31 +160,8 @@ function search() {
 // Queries the YouTube API for the video.
 function queryForVideoId(input) {
     if (input) {
-        var url = 'https://www.googleapis.com/youtube/v3/search';
-
-        // Create request
-        var request = {
-            q: input,
-            part: 'snippet', // 'id',
-            maxResults: 1,
-            safeSearch: 'none',
-            type: 'video',
-            videoEmbeddable: 'true',
-            key: apiKey
-        };
-
-        results = $.getJSON(url, request, handleYoutubeSearchResult);
+        results = $.getJSON("/api/data", { query: input }, handleYoutubeSearchResult);
     }
-}
-
-function queryForVideoId2(input) {
-    if (input) {
-        results = $.getJSON("/data", { query: input }, handleQueryResult);
-    }
-}
-
-function handleQueryResult(result) {
-    console.log(result);
 }
 
 // Populates current video with id
