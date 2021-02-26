@@ -104,6 +104,8 @@ function onPlayerStateChange(event) {
     if (isIndexInBounds(currentVideoIndex)) {
         if (event.data == 0) {
             nextVideo();
+        } else if (event.data == 1 || event.data == 2) {
+            showCurrentVideoElement();
         } else if (event.data == 5) {
             playVideo();
         }
@@ -163,7 +165,7 @@ function queryForVideoId(input) {
         // Create request
         var request = {
             q: input,
-            part: 'snippet',
+            part: 'snippet', // 'id',
             maxResults: 1,
             safeSearch: 'none',
             type: 'video',
@@ -173,6 +175,16 @@ function queryForVideoId(input) {
 
         results = $.getJSON(url, request, handleYoutubeSearchResult);
     }
+}
+
+function queryForVideoId2(input) {
+    if (input) {
+        results = $.getJSON("/data", { query: input }, handleQueryResult);
+    }
+}
+
+function handleQueryResult(result) {
+    console.log(result);
 }
 
 // Populates current video with id
@@ -278,7 +290,7 @@ function showCurrentVideoElement() {
         getPlaylistElementAtIndex(currentVideoIndex).scrollIntoView();
     }
 
-    // Highlight current playlist item in UI (and un-highlight non-playing items)
+    // Highlight current playlist item in UI (and un-highlight non-playing items), and manage play/pause button UI state
     $(".playlist-item").each(function () {
         const element = $(this);
         const elementIndex = parseInt(element.find(".video-name").attr("data-video-index"));
