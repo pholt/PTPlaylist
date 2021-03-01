@@ -10,3 +10,8 @@ Instead of storing YouTube playlists as playlists on YouTube, store them as plai
 Using search queries as playlist entries preserves intent. You may not get exactly the video you were hoping for, but it's better than not knowing what the item in the playlist was in the first place.
 
 This application is fairly simple. It splits text input up into individual search queries, then when it's time to play the entry, it searches YouTube and plays the top search result. So the output is only as good (or specific) as the input search query, limited by YouTube's own search algorithms of course.
+
+## Usage:
+I deploy this via Web Deploy in Visual Studio. If you want to run this, you'll need to plug in your own YouTubeV3 enabled API key into the Web.config. 
+
+More info on getting that setup can be found here: https://developers.google.com/youtube/v3
