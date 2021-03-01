@@ -166,6 +166,7 @@ function queryForVideoId(input) {
 
 // Populates current video with id
 function handleYoutubeSearchResult(result) {
+    result = JSON.parse(result);
     if (result != null &&
         result.items != null &&
         result.items[0] != null &&
@@ -180,8 +181,8 @@ function handleYoutubeSearchResult(result) {
         $(elementInUI).find(".video-name").attr("data-video-id", videoId);
         setCurrentVideo(currentVideoIndex);
     } else {
-        // Not found. Do something?
-        nextVideo();
+        // Error!
+        console.log("Unexpected result: " + result);
     }
 }
 
