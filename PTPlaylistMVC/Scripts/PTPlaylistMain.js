@@ -266,18 +266,22 @@ function showCurrentVideoElement() {
 
     // Highlight current playlist item in UI (and un-highlight non-playing items), and manage play/pause button UI state
     $(".playlist-item").each(function () {
-        const element = $(this);
-        const elementIndex = parseInt(element.find(".video-name").attr("data-video-index"));
-        element.toggleClass("playing", elementIndex === currentVideoIndex);
-        const playButtonElement = element.find(".video-play-button-container :first-child");
-        if (elementIndex === currentVideoIndex) { 
-            playButtonElement.removeClass("play");
-            playButtonElement.addClass("pause");
-        } else {
-            playButtonElement.removeClass("pause");
-            playButtonElement.addClass("play");
-        }
+        setPlayPauseUI(this);
     });
+}
+
+function setPlayPauseUI(playlistElement) {
+    const element = $(playlistElement);
+    const elementIndex = parseInt(element.find(".video-name").attr("data-video-index"));
+    element.toggleClass("playing", elementIndex === currentVideoIndex);
+    const playButtonElement = element.find(".video-play-button-container :first-child");
+    if (elementIndex === currentVideoIndex && player.getPlayerState() === 1) {
+        playButtonElement.removeClass("play");
+        playButtonElement.addClass("pause");
+    } else {
+        playButtonElement.removeClass("pause");
+        playButtonElement.addClass("play");
+    }
 }
 
 // Shuffles the playlist
