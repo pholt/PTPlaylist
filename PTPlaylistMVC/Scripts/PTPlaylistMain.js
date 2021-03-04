@@ -2,10 +2,6 @@
 // TODO: If video not found, show error?
 // TODO: Scrolling with spacebar still happening
 // TODO: Add songs "form" should be a popover that can be called back with a button.
-// TODO: Playing song in playlist should be highlighted.
-// TODO: Support removing individual songs from playlist via playlist UI.
-// TODO: Play button on each song in playlist UI to skip to it.
-// TODO: Export playlist to clipboard doesn't work.
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
 var player;                        // Object handling youtube video player usage.

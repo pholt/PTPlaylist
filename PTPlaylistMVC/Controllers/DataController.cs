@@ -15,6 +15,7 @@ namespace PTPlaylistMVC.Controllers
         // GET api/data/{query}
         public async Task<string> GetAsync(string query)
         {
+            // This query fetches a single result from the YouTubeV3 API.
             string urlBase = "https://www.googleapis.com/youtube/v3/search?key={0}&q={1}&part=snippet&maxResults=1&safeSearch=none&type=video&videoEmbeddable=true";
             string formattedUrl = String.Format(urlBase, API_KEY, HttpUtility.UrlEncode(query));
 
