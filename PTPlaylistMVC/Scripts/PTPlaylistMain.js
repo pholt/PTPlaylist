@@ -473,7 +473,7 @@ function cueYoutubeVideo(video) {
             player.cueVideoById(video.videoId, 0, "large");
             showCurrentVideoElement();
         } else {
-            stopVideo();
+            pauseVideo();
             queryForVideoId(video.searchTerm);
         }
     }
