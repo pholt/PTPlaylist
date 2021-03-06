@@ -8,13 +8,16 @@ namespace PTPlaylistMVC.Models
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "query")]
-        public string Query { get; set; }
-
         [JsonProperty(PropertyName = "videoId")]
         public string VideoId { get; set; }
 
-        [JsonProperty(PropertyName = "refreshDate")]
-        public DateTime RefreshDate { get; set; }
+        [JsonProperty(PropertyName = "lastModifiedDate")]
+        public DateTime LastModifiedDate { get; set; }
+
+        public Video(string query, string videoId) {
+            this.Id = query;
+            this.VideoId = videoId;
+            this.LastModifiedDate = DateTime.UtcNow;
+        }
     }
 }

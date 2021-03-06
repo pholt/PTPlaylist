@@ -162,12 +162,8 @@ function queryForVideoId(input) {
 
 // Populates current video with id
 function handleYoutubeSearchResult(result) {
-    result = JSON.parse(result);
-    if (result != null &&
-        result.items != null &&
-        result.items[0] != null &&
-        result.items[0].id != null) {
-        const videoId = result.items[0].id.videoId;
+    if (result) {
+        const videoId = result;
         if (currentVideoIndex === -1) {
             currentVideoIndex = 0;
         }

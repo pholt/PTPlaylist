@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using PTPlaylistMVC.Models;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
-using Microsoft.Extensions.Configuration;
 using PTPlaylistMVC.Interfaces;
 
 namespace PTPlaylistMVC.Services
@@ -26,16 +24,16 @@ namespace PTPlaylistMVC.Services
             await this._container.CreateItemAsync<Video>(video, new PartitionKey(video.Id));
         }
 
-        public async Task DeleteVideoAsync(string id)
+        public async Task DeleteVideoAsync(string query)
         {
-            await this._container.DeleteItemAsync<Video>(id, new PartitionKey(id));
+            await this._container.DeleteItemAsync<Video>(query, new PartitionKey(query));
         }
 
-        public async Task<Video> GetVideoAsync(string id)
+        public async Task<Video> GetVideoAsync(string query)
         {
             try
             {
-                ItemResponse<Video> response = await this._container.ReadItemAsync<Video>(id, new PartitionKey(id));
+                ItemResponse<Video> response = await this._container.ReadItemAsync<Video>(query, new PartitionKey(query));
                 return response.Resource;
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -47,6 +45,11 @@ namespace PTPlaylistMVC.Services
 
         public async Task<IEnumerable<Video>> GetVideosAsync(string queryString)
         {
+            if (string.IsNullOrWhiteSpace(queryString))
+            {
+                queryString = "SELECT * FROM c";
+            }
+
             var query = this._container.GetItemQueryIterator<Video>(new QueryDefinition(queryString));
             List<Video> results = new List<Video>();
             while (query.HasMoreResults)
@@ -59,9 +62,9 @@ namespace PTPlaylistMVC.Services
             return results;
         }
 
-        public async Task UpdateVideoAsync(string id, Video video)
+        public async Task UpdateVideoAsync(string query, Video video)
         {
-            await this._container.UpsertItemAsync<Video>(video, new PartitionKey(id));
+            await this._container.UpsertItemAsync<Video>(video, new PartitionKey(query));
         }
     }
 }
