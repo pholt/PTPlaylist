@@ -1,7 +1,9 @@
-// TODO: Database storing searches and videoIds to avoid searching "unnecessarily"?
-// TODO: If video not found, show error?
-// TODO: Scrolling with spacebar still happening
-// TODO: Add songs "form" should be a popover that can be called back with a button.
+// TODOs:
+//  Bug -> Removing last video causes playback issues
+//  Bug -> "Add to Front of List" functionality causes styles not to be applied to playlist UI
+//  If video not found, show error?
+//  Scrolling with spacebar still happening
+//  Add songs "form" should be a popover that can be called back with a button.
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
 var player;                        // Object handling youtube video player usage.
@@ -198,12 +200,13 @@ function appendToPlaylistUI(videos) {
     // Build playlist items
     const template = $("#playlistItemTemplate").find(".playlist-item").clone(true);
     template.removeAttr("hidden");
+    const currentLength = packeryGrid.packery('getItemElements').length;
     videos.forEach(function (item, index) {
         let videoDataNode = template.find(".video-name");
         videoDataNode.text(item.searchTerm);
         videoDataNode.attr("data-search-term", item.searchTerm);
         videoDataNode.attr("data-video-id", item.videoId);
-        videoDataNode.attr("data-video-index", index);
+        videoDataNode.attr("data-video-index", index + currentLength);
         let completeNode = template[0].cloneNode(true);
         packeryGrid.append(completeNode).packery('addItems', completeNode);
     });
@@ -257,7 +260,10 @@ function setPlaylistFromUI(currentVideoElement) {
 function showCurrentVideoElement() {
     // Scroll video into view
     if (isIndexInBounds(currentVideoIndex)) {
-        getPlaylistElementAtIndex(currentVideoIndex).scrollIntoView();
+        const element = getPlaylistElementAtIndex(currentVideoIndex);
+        if (element) {
+            element.scrollIntoView();
+        }
     }
 
     // Highlight current playlist item in UI (and un-highlight non-playing items), and manage play/pause button UI state
