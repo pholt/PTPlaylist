@@ -136,11 +136,15 @@ function search() {
         }
     }
 
-    if ($('#addFrontCheck').prop('checked') && currentVideoIndex > 0) {
+    if ($('#addFrontCheck').prop('checked') && currentVideoIndex >= 0) {
         const previousSection = playlist.slice(0, currentVideoIndex + 1);
         const laterSection = playlist.slice(currentVideoIndex + 1);
         playlist = previousSection.concat(videosToBeAdded, laterSection);
         showPlaylist();
+        const playerState = player.getPlayerState();
+        if (playerState === 1 || playerState === 2) {
+            setPlayPauseUI(getPlaylistElementAtIndex(currentVideoIndex));
+        }
     } else {
         playlist = playlist.concat(videosToBeAdded);
         appendToPlaylistUI(videosToBeAdded);
