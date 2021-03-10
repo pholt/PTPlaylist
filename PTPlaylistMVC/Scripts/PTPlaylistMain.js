@@ -139,8 +139,6 @@ function search() {
         const laterSection = playlist.slice(currentVideoIndex + 1);
         playlist = previousSection.concat(videosToBeAdded, laterSection);
         showPlaylist();
-        const playerState = player.getPlayerState();
-        setPlayPauseUI(getPlaylistElementAtIndex(currentVideoIndex));
     } else {
         playlist = playlist.concat(videosToBeAdded);
         appendToPlaylistUI(videosToBeAdded);
@@ -185,6 +183,7 @@ function showPlaylist() {
     // Rebuild playlist by removing all elements and re-adding from playlist data object.
     packeryGrid.packery('remove', $(".playlist-item"));
     appendToPlaylistUI(playlist);
+    setPlayPauseUI(getPlaylistElementAtIndex(currentVideoIndex));
 }
 
 // Add videos to the end of the playlist UI
