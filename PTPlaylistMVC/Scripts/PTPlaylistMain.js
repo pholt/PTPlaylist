@@ -318,7 +318,7 @@ function setPlayerSize(width, height) {
 
 function exportPlaylistToText() {
     const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
-    const delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = /\n/ : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value;
+    const delimiter = inputDelimiterSelect.selectedIndex == 0 ? delimeter = '\r\n' : inputDelimiterSelect.options[inputDelimiterSelect.selectedIndex].value;
     navigator.clipboard.writeText(playlist.map(item => item.searchTerm).join(delimiter)).then(
         function () { console.log("Wrote playlist to clipboard."); }, // Success
         function () { console.log("Failed to write playlist to clipboard."); } // Failure
