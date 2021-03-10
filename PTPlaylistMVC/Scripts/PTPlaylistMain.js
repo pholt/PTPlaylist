@@ -2,6 +2,8 @@
 //  If video not found, show error?
 //  Scrolling with spacebar still happening
 //  Add songs "form" should be a popover that can be called back with a button.
+//  Add "max video duration" via setTimeout on cueYoutubeVideo (or something) to call "nextVideo" after a certain time elapses
+//      Make sure to cancel the timer if we call nextVideo!
 
 // ------------------------- GLOBAL DATA STRUCTURES -----------------------------
 var player;                        // Object handling youtube video player usage.
