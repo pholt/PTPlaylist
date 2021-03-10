@@ -1,6 +1,4 @@
 // TODOs:
-//  Bug -> Removing last video causes playback issues
-//  Bug -> "Add to Front of List" functionality causes styles not to be applied to playlist UI
 //  If video not found, show error?
 //  Scrolling with spacebar still happening
 //  Add songs "form" should be a popover that can be called back with a button.
@@ -108,7 +106,7 @@ function onPlayerStateChange(event) {
             playVideo();
         }
     } else {
-        player.stopVideo();
+        player.pauseVideo();
         showCurrentVideoElement();
     }
 }
@@ -142,9 +140,7 @@ function search() {
         playlist = previousSection.concat(videosToBeAdded, laterSection);
         showPlaylist();
         const playerState = player.getPlayerState();
-        if (playerState === 1 || playerState === 2) {
-            setPlayPauseUI(getPlaylistElementAtIndex(currentVideoIndex));
-        }
+        setPlayPauseUI(getPlaylistElementAtIndex(currentVideoIndex));
     } else {
         playlist = playlist.concat(videosToBeAdded);
         appendToPlaylistUI(videosToBeAdded);
@@ -181,14 +177,6 @@ function handleYoutubeSearchResult(result) {
     } else {
         // Error!
         console.log("Unexpected result: " + result);
-    }
-}
-
-// Sets the currentVideo to the video in the playlist with the given index
-function setCurrentVideo(index) {
-    if (isIndexInBounds(index)) {
-        currentVideoIndex = index;
-        cueYoutubeVideo(playlist[currentVideoIndex]);
     }
 }
 
@@ -246,6 +234,7 @@ function orderItems() {
 // Rebuild playlist from changes in the UI.
 function setPlaylistFromUI(currentVideoElement) {
     playlist = [];
+
     $("#playlistGrid").children().each(function (index, element) {
         let videoInfoNode = $(element).find(".video-name");
         let playlistIndex = parseInt(videoInfoNode.attr("data-video-index"));
@@ -407,6 +396,14 @@ function isIndexInBounds(index) {
 
 // ------------------------- YOUTUBE VIDEO PLAYER FUNCTIONS -----------------------------
 
+// Sets the currentVideo to the video in the playlist with the given index
+function setCurrentVideo(index) {
+    if (player && isIndexInBounds(index)) {
+        currentVideoIndex = index;
+        cueYoutubeVideo(playlist[currentVideoIndex]);
+    }
+}
+
 // Internal function for stopping player video.
 function stopVideo() {
     if (player) {
@@ -430,21 +427,17 @@ function pauseVideo() {
 }
 
 function nextVideo() {
-    if (player) {
+    if (player && isIndexInBounds(currentVideoIndex + 1)) {
         currentVideoIndex++;
-
-        if (isIndexInBounds(currentVideoIndex)) {
-            cueYoutubeVideo(playlist[currentVideoIndex]);
-            showCurrentVideoElement();
-        }
+        cueYoutubeVideo(playlist[currentVideoIndex]);
+        showCurrentVideoElement();
     }
 }
 
 function previousVideo() {
     if (player) {
-        --currentVideoIndex;
-
-        if (isIndexInBounds(currentVideoIndex)) {
+        if (isIndexInBounds(currentVideoIndex - 1)) {
+            --currentVideoIndex;
             cueYoutubeVideo(playlist[currentVideoIndex]);
             showCurrentVideoElement();
         } else {
@@ -455,8 +448,7 @@ function previousVideo() {
 
 function restartPlaylist() {
     if (player) {
-        currentVideoIndex = 0;
-        cueYoutubeVideo(playlist[currentVideoIndex]);
+        setCurrentVideo(0);
     }
 }
 
@@ -466,10 +458,15 @@ function removeVideoFromPlaylist(index) {
         const elementToRemove = getPlaylistElementAtIndex(index);
         packeryGrid.packery('remove', $(elementToRemove)).packery('shiftLayout');
 
-        const playNextVideo = index === currentVideoIndex;
-        orderItems(); // This will set currentVideoIndex to the correct value
-        if (playNextVideo) {
-            setCurrentVideo(currentVideoIndex);
+        if (playlist.length === 1) { // Removing only video
+            playlist = [];
+            currentVideoIndex = -1;
+        } else {
+            const playNextVideo = index === currentVideoIndex;
+            orderItems(); // This will set currentVideoIndex to the correct value
+            if (playNextVideo) {
+                setCurrentVideo(currentVideoIndex);
+            }
         }
     } else {
         console.log("Tried to remove video with index " + index + ", but legal indices are between 0 and " + (playlist.length - 1));
