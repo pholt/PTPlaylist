@@ -113,7 +113,7 @@ function onPlayerStateChange(event) {
 
 // Separates inputs and adds them to the playlist.
 // Called when the "Add to Playlist" button is pressed.
-function search() {
+function addVideos() {
     const input = $('#query').val().replace("-", " "); // Pesky dashes mess up the input.
     const inputDelimiterSelect = document.getElementById("inputDelimeterSelect");
     // Use newline regex if we have the first index, otherwise, go get the value
