@@ -51,6 +51,19 @@ function onKeyUp(evt) {
     }
 }
 
+function showHideAddForm() {
+    const form = $("#addToPlaylistForm");
+    if (form.prop("hidden")) {
+        form.attr("hidden", false);
+    } else {
+        form.attr("hidden", true);
+    }
+}
+
+function hideAddForm() {
+    $("#addToPlaylistForm").attr("hidden", true);
+}
+
 // Pauses/plays video when spacebar is hit.
 function onSpaceBarUp() {
     if (player) {

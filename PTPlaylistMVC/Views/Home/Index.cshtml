@@ -8,51 +8,14 @@
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <div class="row">
-    <div class="column-left">
-        <div id="textAbovePlayer" class="playlist-div">
-            <label id="videoLabel" class="ownLine">Player: </label>
-        </div>
-        <div id="player" class=""></div>
-
-        <div id="inputArea" class="playlist-input">
-            <label>
-                <textarea id="query" rows="5" cols="120" type="text">Insert list of YouTube things here!</textarea>
-            </label>
-        </div>
-
-        <div id="inputButtons" class="playlist-div">
-            <div id="inputModifiers">
-                <div id="delimiterSelectContainer" class="ownLine">
-                    <label class="">Input Delimeter: </label>
-                    <select class="" id="inputDelimeterSelect">
-                        <option value="\r\n">Newline ('\n')</option>
-                        <option value=",">Comma (',')</option>
-                        <option value="|">Pipe ('|')</option>
-                        <option value=":">Colon (':')</option>
-                        <option value=";">Semi-Colon (';')</option>
-                        <option value="/">Forward Slash ('/')</option>
-                        <option value="\">Back Slash ('\')</option>
-                    </select>
-                </div>
-                <div id="shuffleInputCheckContainer" class="ownLine">
-                    <label class="">Shuffle Input: </label><input id="shuffleCheck" type="checkbox" name="shuffle" checked />
-                </div>
-                <div>
-                    <label class="">Add to Front of List: </label><input id="addFrontCheck" type="checkbox" name="addFront" />
-                </div>
+        <div id="playerContainer">
+            <div id="showHideFormButtonContainer">
+                <button onclick="showHideAddForm()">+</button>
             </div>
-
-            <button id="add-videos-button" onclick="addVideos()">Add to Playlist</button>
+            <div id="player" class=""></div>
         </div>
-    </div>
-    <div class="column-right">
         <div class="playlist-div">
-            <label class="ownLine">Playlist: </label><br />
             <button id="copyPlaylistButton">Copy to Clipboard</button>
-        </div>
-        <div id="playlistContainer" class="grid-container">
-            <div id="playlistGrid" class="grid">
-            </div>
         </div>
         <div class="playlist-div">
             <div id="playerButtons" class="playlist-div">
@@ -65,7 +28,10 @@
                 <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
             </div>
         </div>
-    </div>
+        <div id="playlistContainer" class="grid-container">
+            <div id="playlistGrid" class="grid">
+            </div>
+        </div>
 </div>
 
 <div id="playlistItemTemplate" hidden="hidden">
@@ -74,6 +40,43 @@
         <div class="video-play-button-container"><div class="play"></div></div>
         <div class="video-name" data-video-id="" data-search-term=""></div>
         <div class="video-remove-button">X</div>
+    </div>
+</div>
+
+<div id="addToPlaylistForm">
+    <div id="hideAddFormButtonContainer">
+        <button onclick="hideAddForm()">X</button>
+    </div>
+    <div id="inputArea" class="playlist-input">
+        <label>
+            <textarea id="query" rows="10" cols="120" type="text">Insert list of YouTube things here!</textarea>
+        </label>
+    </div>
+
+    <div id="inputButtons" class="playlist-div">
+        <div id="inputModifiers">
+            <div id="delimiterSelectContainer" class="ownLine">
+                <label class="">Input Delimeter: </label>
+                <select class="" id="inputDelimeterSelect">
+                    <option value="\r\n">Newline ('\n')</option>
+                    <option value=",">Comma (',')</option>
+                    <option value="|">Pipe ('|')</option>
+                    <option value=":">Colon (':')</option>
+                    <option value=";">Semi-Colon (';')</option>
+                    <option value="/">Forward Slash ('/')</option>
+                    <option value="\">Back Slash ('\')</option>
+                </select>
+            </div>
+            <div id="shuffleInputCheckContainer" class="ownLine">
+                <label class="">Shuffle Input: </label><input id="shuffleCheck" type="checkbox" name="shuffle" checked />
+            </div>
+            <div>
+                <label class="">Add to Front of List: </label><input id="addFrontCheck" type="checkbox" name="addFront" />
+            </div>
+        </div>
+
+        <br />
+        <button id="add-videos-button" onclick="addVideos()">Add to Playlist</button>
     </div>
 </div>
 
