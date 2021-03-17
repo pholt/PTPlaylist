@@ -59,48 +59,50 @@
     <div id="hideAddFormButtonContainer" class="row">
         <button onclick="hideAddForm()" title="Close This Window">X</button>
     </div>
-    <div id="inputArea" class="playlist-input row">
-        <label> Insert list of YouTube videos here!
-            <textarea id="query" rows="10" cols="120" type="text"></textarea>
-        </label>
-    </div>
+    <div id="addToPlaylistFormInnerContent">
+        <div id="inputArea" class="playlist-input row">
+            <label> Insert list of YouTube videos here!
+                <textarea id="query" rows="10" cols="120" type="text"></textarea>
+            </label>
+        </div>
 
-    <div id="inputButtons" class="playlist-div row">
-        <table>
-            <tr>
-                <td>Input Delimeter: </td>
-                <td>
-                    <select class="" id="inputDelimeterSelect">
-                        <option value="\r\n">Newline ('\n')</option>
-                        <option value=",">Comma (',')</option>
-                        <option value="|">Pipe ('|')</option>
-                        <option value=":">Colon (':')</option>
-                        <option value=";">Semi-Colon (';')</option>
-                        <option value="/">Forward Slash ('/')</option>
-                        <option value="\">Back Slash ('\')</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Shuffle Input: </td>
-                <td>
-                    <input id="shuffleCheck" type="checkbox" name="shuffle" checked />
-                </td>
-            </tr>
-            <tr>
-                <td>Add to Front of List:</td>
-                <td>
-                    <input id="addFrontCheck" type="checkbox" name="addFront" />
-                </td>
-            </tr>
-            <tr><td colspan="2">...</td></tr>
-            <tr>
-                <td colspan="2">
-                    <button id="add-videos-button" onclick="addVideos()">Add to Playlist</button>
-                </td>
-            </tr>
+        <div id="inputButtons" class="playlist-div row">
+            <table>
+                <tr>
+                    <td>Input Delimeter: </td>
+                    <td>
+                        <select class="" id="inputDelimeterSelect">
+                            <option value="\r\n">Newline ('\n')</option>
+                            <option value=",">Comma (',')</option>
+                            <option value="|">Pipe ('|')</option>
+                            <option value=":">Colon (':')</option>
+                            <option value=";">Semi-Colon (';')</option>
+                            <option value="/">Forward Slash ('/')</option>
+                            <option value="\">Back Slash ('\')</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Shuffle Input: </td>
+                    <td>
+                        <input id="shuffleCheck" type="checkbox" name="shuffle" checked />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Add to Front of List:</td>
+                    <td>
+                        <input id="addFrontCheck" type="checkbox" name="addFront" />
+                    </td>
+                </tr>
+                <tr><td colspan="2">...</td></tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="add-videos-button" onclick="addVideos()">Add to Playlist</button>
+                    </td>
+                </tr>
             
-        </table>
+            </table>
+        </div>
     </div>
 </div>
 
