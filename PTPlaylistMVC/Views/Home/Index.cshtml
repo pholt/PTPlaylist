@@ -8,28 +8,40 @@
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <div class="row">
-        <div id="playerContainer">
+        <div id="playerContainer" class="center-block">
             <div id="showHideFormButtonContainer">
                 <button onclick="showHideAddForm()">+</button>
             </div>
-            <div id="player" class=""></div>
-        </div>
-        <div class="playlist-div">
-            <button id="copyPlaylistButton">Copy to Clipboard</button>
-        </div>
-        <div class="playlist-div">
-            <div id="playerButtons" class="playlist-div">
-                <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
-                <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
+            <div id="player"></div>
+            <div class="playlist-div centered-content">
+                <table id="playerButtonsTable" class="even-cell-widths">
+                    <tr>
+                        <td>
+                            <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
+                        </td>
+                        <td>
+                            <button id="playlistOptionsButton" onclick="showHidePlaylistOptions()">Options</button>
+                        </td>
+                        <td>
+                            <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
+                        </td>
+                    </tr>
+                    <tr id="playlistOptions" hidden="hidden">
+                        <td>
+                            <button id="shuffle-button" onclick="shufflePlaylist()">Shuffle Playlist</button>
+                        </td>
+                        <td>
+                            <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
+                        </td>
+                        <td>
+                            <button id="copyPlaylistButton">Copy to Clipboard</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
-
-            <div id="playlistButtons" class="playlist-div">
-                <button id="shuffle-button" onclick="shufflePlaylist()">Shuffle Playlist</button>
-                <button id="clear-button" onclick="clearPlaylist()">Clear Playlist</button>
-            </div>
-        </div>
-        <div id="playlistContainer" class="grid-container">
-            <div id="playlistGrid" class="grid">
+            <div id="playlistContainer" class="grid-container">
+                <div id="playlistGrid" class="grid">
+                </div>
             </div>
         </div>
 </div>
@@ -44,39 +56,51 @@
 </div>
 
 <div id="addToPlaylistForm">
-    <div id="hideAddFormButtonContainer">
+    <div id="hideAddFormButtonContainer" class="row">
         <button onclick="hideAddForm()">X</button>
     </div>
-    <div id="inputArea" class="playlist-input">
+    <div id="inputArea" class="playlist-input row">
         <label>
             <textarea id="query" rows="10" cols="120" type="text">Insert list of YouTube things here!</textarea>
         </label>
     </div>
 
-    <div id="inputButtons" class="playlist-div">
-        <div id="inputModifiers">
-            <div id="delimiterSelectContainer" class="ownLine">
-                <label class="">Input Delimeter: </label>
-                <select class="" id="inputDelimeterSelect">
-                    <option value="\r\n">Newline ('\n')</option>
-                    <option value=",">Comma (',')</option>
-                    <option value="|">Pipe ('|')</option>
-                    <option value=":">Colon (':')</option>
-                    <option value=";">Semi-Colon (';')</option>
-                    <option value="/">Forward Slash ('/')</option>
-                    <option value="\">Back Slash ('\')</option>
-                </select>
-            </div>
-            <div id="shuffleInputCheckContainer" class="ownLine">
-                <label class="">Shuffle Input: </label><input id="shuffleCheck" type="checkbox" name="shuffle" checked />
-            </div>
-            <div>
-                <label class="">Add to Front of List: </label><input id="addFrontCheck" type="checkbox" name="addFront" />
-            </div>
-        </div>
-
-        <br />
-        <button id="add-videos-button" onclick="addVideos()">Add to Playlist</button>
+    <div id="inputButtons" class="playlist-div row">
+        <table>
+            <tr>
+                <td>Input Delimeter: </td>
+                <td>
+                    <select class="" id="inputDelimeterSelect">
+                        <option value="\r\n">Newline ('\n')</option>
+                        <option value=",">Comma (',')</option>
+                        <option value="|">Pipe ('|')</option>
+                        <option value=":">Colon (':')</option>
+                        <option value=";">Semi-Colon (';')</option>
+                        <option value="/">Forward Slash ('/')</option>
+                        <option value="\">Back Slash ('\')</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Shuffle Input: </td>
+                <td>
+                    <input id="shuffleCheck" type="checkbox" name="shuffle" checked />
+                </td>
+            </tr>
+            <tr>
+                <td>Add to Front of List:</td>
+                <td>
+                    <input id="addFrontCheck" type="checkbox" name="addFront" />
+                </td>
+            </tr>
+            <tr><td colspan="2">...</td></tr>
+            <tr>
+                <td colspan="2">
+                    <button id="add-videos-button" onclick="addVideos()">Add to Playlist</button>
+                </td>
+            </tr>
+            
+        </table>
     </div>
 </div>
 

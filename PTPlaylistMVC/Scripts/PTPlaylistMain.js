@@ -29,6 +29,8 @@ $(function () {
     } else {
         document.onkeyup = onKeyUp;
     }
+
+    setEvenCellWidths();
 });
 
 // Listen for key events.
@@ -52,16 +54,36 @@ function onKeyUp(evt) {
 }
 
 function showHideAddForm() {
-    const form = $("#addToPlaylistForm");
-    if (form.prop("hidden")) {
-        form.attr("hidden", false);
+    toggleShowHideElementById("addToPlaylistForm");
+}
+
+function showHidePlaylistOptions() {
+    toggleShowHideElementById("playlistOptions");
+}
+
+function toggleShowHideElementById(id) {
+    const selector = "#" + id;
+    const element = $(selector);
+    if (element.prop("hidden")) {
+        element.attr("hidden", false);
     } else {
-        form.attr("hidden", true);
+        element.attr("hidden", true);
     }
 }
 
 function hideAddForm() {
     $("#addToPlaylistForm").attr("hidden", true);
+}
+
+function setEvenCellWidths() {
+    const tableRows = $(".even-cell-widths").find("tr").each(function (index, row) {
+        let cellsInRow = $(row).find("td");
+        let relativeWidth = (100 / cellsInRow.length) + "%";
+        console.log(relativeWidth);
+        cellsInRow.each(function (index, cell) {
+            $(cell).attr("width", relativeWidth);
+        });
+    });
 }
 
 // Pauses/plays video when spacebar is hit.
@@ -166,6 +188,7 @@ function addVideos() {
     }
 
     $('#query').val(""); // Clear input field so users don't accidentally add the same input twice.
+    hideAddForm();
 }
 
 // Queries the YouTube API for the video.
