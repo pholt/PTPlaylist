@@ -175,12 +175,14 @@ table {
     max-width: 800px;
     max-height: 500px;
     border: 1px solid black;
-    background-color: gray;
+    background-color: #d0d0d0;
 }
 
-    #addToPlaylistForm > * {
-        margin-left: 20px;
+    #addToPlaylistFormInnerContent > * {
+        margin-left: 15%;
+        margin-top: 5%;
         max-width: 80%;
+        overflow: hidden;
     }
 
 .packery-drop-placeholder {

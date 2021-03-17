@@ -76,7 +76,7 @@ function hideAddForm() {
 }
 
 function setEvenCellWidths() {
-    const tableRows = $(".even-cell-widths").find("tr").each(function (index, row) {
+    $(".even-cell-widths").find("tr").each(function (index, row) {
         let cellsInRow = $(row).find("td");
         let relativeWidth = (100 / cellsInRow.length) + "%";
         cellsInRow.each(function (index, cell) {
