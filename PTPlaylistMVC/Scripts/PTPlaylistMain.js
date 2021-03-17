@@ -24,34 +24,15 @@ $(function () {
     $("#playlistGrid").on('click', playlistGridDelegate);
 
     // Add listener for spacebar: pauses or plays video.
-    if (document.addEventListener) {
-        document.addEventListener("keyup", onKeyUp, false);
-    } else {
-        document.onkeyup = onKeyUp;
-    }
+    window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 32 && e.target == document.body) {
+            e.preventDefault();
+            onSpaceBarUp();
+        }
+    });
 
     setEvenCellWidths();
 });
-
-// Listen for key events.
-function onKeyUp(evt) {
-    if (evt = evt ? evt : window.event ? event : null) {
-        switch (evt.keyCode) {
-            case 32: //spacebar
-                // Don't interrupt typing input
-                if (!($("#query").is(':focus'))) {
-                    document.getElementsByTagName("body")[0].focus();
-                    evt.preventDefault();
-                    onSpaceBarUp();
-                    return false;
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-}
 
 function showHideAddForm() {
     toggleShowHideElementById("addToPlaylistForm");
@@ -291,8 +272,9 @@ function showCurrentVideoElement() {
     // Scroll video into view
     if (isIndexInBounds(currentVideoIndex)) {
         const element = getPlaylistElementAtIndex(currentVideoIndex);
-        if (element) {
+        if (element && !anyPartOfElementInViewport(element)) {
             element.scrollIntoView();
+            document.getElementById("playerContainer").scrollIntoView();
         }
     }
 
@@ -300,6 +282,27 @@ function showCurrentVideoElement() {
     $(".playlist-item").each(function () {
         setPlayPauseUI(this);
     });
+}
+
+// https://stackoverflow.com/questions/123999/how-can-i-tell-if-a-dom-element-is-visible-in-the-current-viewport
+function anyPartOfElementInViewport(element) {
+    const top = element.offsetTop;
+    const left = element.offsetLeft;
+    const width = element.offsetWidth;
+    const height = element.offsetHeight;
+
+    while (element.offsetParent) {
+        element = element.offsetParent;
+        top += element.offsetTop;
+        left += element.offsetLeft;
+    }
+
+    return (
+        top < (window.pageYOffset + window.innerHeight) &&
+        left < (window.pageXOffset + window.innerWidth) &&
+        (top + height) > window.pageYOffset &&
+        (left + width) > window.pageXOffset
+    );
 }
 
 function setPlayPauseUI(playlistElement) {
