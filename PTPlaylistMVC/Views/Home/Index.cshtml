@@ -10,20 +10,20 @@
 <div class="row">
         <div id="playerContainer" class="center-block">
             <div id="showHideFormButtonContainer">
-                <button onclick="showHideAddForm()">+</button>
+                <button onclick="showHideAddForm()" title="Add more videos!">+</button>
             </div>
             <div id="player"></div>
             <div class="playlist-div centered-content">
                 <table id="playerButtonsTable" class="even-cell-widths">
                     <tr>
                         <td>
-                            <button id="previousVideo" onclick="previousVideo()" tabIndex="-1">Previous</button>
+                            <button id="previousVideo" onclick="previousVideo()" tabIndex="-1" title="Previous Video">Previous</button>
                         </td>
                         <td>
-                            <button id="playlistOptionsButton" onclick="showHidePlaylistOptions()">Options</button>
+                            <button id="playlistOptionsButton" onclick="showHidePlaylistOptions()" title="More Playlist Options">Options</button>
                         </td>
                         <td>
-                            <button id="nextVideo" onclick="nextVideo()" tabIndex="-1">Next</button>
+                            <button id="nextVideo" onclick="nextVideo()" tabIndex="-1" title="Next Video">Next</button>
                         </td>
                     </tr>
                     <tr id="playlistOptions" hidden="hidden">
@@ -57,11 +57,11 @@
 
 <div id="addToPlaylistForm">
     <div id="hideAddFormButtonContainer" class="row">
-        <button onclick="hideAddForm()">X</button>
+        <button onclick="hideAddForm()" title="Close This Window">X</button>
     </div>
     <div id="inputArea" class="playlist-input row">
-        <label>
-            <textarea id="query" rows="10" cols="120" type="text">Insert list of YouTube things here!</textarea>
+        <label> Insert list of YouTube videos here!
+            <textarea id="query" rows="10" cols="120" type="text"></textarea>
         </label>
     </div>
 
