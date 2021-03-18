@@ -271,9 +271,8 @@ function showCurrentVideoElement() {
     // Scroll video into view
     if (isIndexInBounds(currentVideoIndex)) {
         const element = getPlaylistElementAtIndex(currentVideoIndex);
-        if (element && !anyPartOfElementInViewport(element)) {
-            element.scrollIntoView();
-            document.getElementById("playerContainer").scrollIntoView();
+        if (element) {
+            document.getElementById("playlistContainer").scroll(0, currentVideoIndex * 62);
         }
     }
 
@@ -281,27 +280,6 @@ function showCurrentVideoElement() {
     $(".playlist-item").each(function () {
         setPlayPauseUI(this);
     });
-}
-
-// https://stackoverflow.com/questions/123999/how-can-i-tell-if-a-dom-element-is-visible-in-the-current-viewport
-function anyPartOfElementInViewport(element) {
-    const top = element.offsetTop;
-    const left = element.offsetLeft;
-    const width = element.offsetWidth;
-    const height = element.offsetHeight;
-
-    while (element.offsetParent) {
-        element = element.offsetParent;
-        top += element.offsetTop;
-        left += element.offsetLeft;
-    }
-
-    return (
-        top < (window.pageYOffset + window.innerHeight) &&
-        left < (window.pageXOffset + window.innerWidth) &&
-        (top + height) > window.pageYOffset &&
-        (left + width) > window.pageXOffset
-    );
 }
 
 function setPlayPauseUI(playlistElement) {
