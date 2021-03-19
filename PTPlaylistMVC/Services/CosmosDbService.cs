@@ -19,6 +19,10 @@ namespace PTPlaylistMVC.Services
             this._container = dbClient.GetContainer(databaseName, containerName);
         }
 
+        public bool HasContainerId() {
+            return string.IsNullOrEmpty(this._container.Id);
+        }
+
         public async Task AddVideoAsync(Video video)
         {
             await this._container.CreateItemAsync<Video>(video, new PartitionKey(video.Id));

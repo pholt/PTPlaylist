@@ -225,9 +225,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ICosmosDbService.cs" />
+    <Compile Include="Interfaces\IYoutubeService.cs" />
     <Compile Include="Models\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CosmosDbService.cs" />
+    <Compile Include="Services\YoutubeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />

@@ -6,6 +6,7 @@ namespace PTPlaylistMVC.Interfaces
 {
     public interface ICosmosDbService
     {
+        bool HasContainerId();
         Task<IEnumerable<Video>> GetVideosAsync(string query);
         Task<Video> GetVideoAsync(string id);
         Task AddVideoAsync(Video video);
