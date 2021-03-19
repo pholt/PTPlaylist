@@ -149,6 +149,7 @@ table {
         width: 12px;
         height: 20px;
         color: red;
+        float: right;
     }
 
 #hideAddFormButtonContainer {
