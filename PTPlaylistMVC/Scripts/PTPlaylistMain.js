@@ -31,10 +31,14 @@ $(function () {
     });
 
     setEvenCellWidths();
+    document.getElementById("query").focus();
 });
 
 function showHideAddForm() {
-    toggleShowHideElementById("addToPlaylistForm");
+    const element = toggleShowHideElementById("addToPlaylistForm");
+    if (!element.prop("hidden")) {
+        document.getElementById("query").focus();
+    }
 }
 
 function showHidePlaylistOptions() {
@@ -49,10 +53,7 @@ function toggleShowHideElementById(id) {
     } else {
         element.attr("hidden", true);
     }
-}
-
-function hideAddForm() {
-    $("#addToPlaylistForm").attr("hidden", true);
+    return element;
 }
 
 function setEvenCellWidths() {
