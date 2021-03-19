@@ -24,34 +24,15 @@ $(function () {
     $("#playlistGrid").on('click', playlistGridDelegate);
 
     // Add listener for spacebar: pauses or plays video.
-    if (document.addEventListener) {
-        document.addEventListener("keyup", onKeyUp, false);
-    } else {
-        document.onkeyup = onKeyUp;
-    }
+    window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 32 && e.target == document.body) {
+            e.preventDefault();
+            onSpaceBarUp();
+        }
+    });
 
     setEvenCellWidths();
 });
-
-// Listen for key events.
-function onKeyUp(evt) {
-    if (evt = evt ? evt : window.event ? event : null) {
-        switch (evt.keyCode) {
-            case 32: //spacebar
-                // Don't interrupt typing input
-                if (!($("#query").is(':focus'))) {
-                    document.getElementsByTagName("body")[0].focus();
-                    evt.preventDefault();
-                    onSpaceBarUp();
-                    return false;
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-}
 
 function showHideAddForm() {
     toggleShowHideElementById("addToPlaylistForm");
@@ -291,7 +272,7 @@ function showCurrentVideoElement() {
     if (isIndexInBounds(currentVideoIndex)) {
         const element = getPlaylistElementAtIndex(currentVideoIndex);
         if (element) {
-            element.scrollIntoView();
+            document.getElementById("playlistContainer").scroll(0, currentVideoIndex * 62);
         }
     }
 
