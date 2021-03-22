@@ -12,12 +12,7 @@ namespace PTPlaylistMVC.Controllers
     {
         private static IYoutubeService _youtubeService = new YoutubeService();
 
-        private static readonly ICosmosDbService _cosmosDbService = new CosmosDbService(
-            new Microsoft.Azure.Cosmos.CosmosClient(
-                System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_ACCOUNT"], 
-                System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_KEY"]),
-            System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_DB_NAME"],
-            System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_DB_CONTAINER_NAME"]);
+        private static readonly ICosmosDbService _cosmosDbService = new CosmosDbService();
 
         private static Regex alphanumericRegex = new Regex("[^a-zA-Z0-9 -]");
 
@@ -30,7 +25,7 @@ namespace PTPlaylistMVC.Controllers
 
             query = alphanumericRegex.Replace(query, "");
 
-            if (_cosmosDbService.HasContainerId()) {
+            if (_cosmosDbService.IsConfigured()) {
                 Models.Video storedVideo = await _cosmosDbService.GetVideoAsync(query);
                 if (storedVideo != null && !string.IsNullOrWhiteSpace(storedVideo.VideoId))
                 {

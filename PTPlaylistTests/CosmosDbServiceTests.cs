@@ -9,7 +9,7 @@ namespace PTPlaylistTests
     [TestClass]
     public class CosmosDbServiceTests
     {
-        private ICosmosDbService blankCosmosDbService = new CosmosDbService(new CosmosClient("", ""), "", "");
+        private ICosmosDbService blankCosmosDbService = new CosmosDbService();
 
         [TestMethod]
         public void TestMethod1()
