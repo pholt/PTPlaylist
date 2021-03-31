@@ -9,7 +9,6 @@ namespace PTPlaylistMVC.Services
 {
     public class CosmosDbService : ICosmosDbService
     {
-        private bool _isConfigured = false;
         private Container _container;
 
         public CosmosDbService()
@@ -18,12 +17,6 @@ namespace PTPlaylistMVC.Services
             string cosmosKey = System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_KEY"];
             string cosmosDbName = System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_DB_NAME"];
             string cosmosContainerName = System.Web.Configuration.WebConfigurationManager.AppSettings["COSMOS_DB_CONTAINER_NAME"];
-            
-            this._isConfigured = 
-                !string.IsNullOrWhiteSpace(cosmosAccountName) &&
-                !string.IsNullOrWhiteSpace(cosmosKey) &&
-                !string.IsNullOrWhiteSpace(cosmosDbName) &&
-                !string.IsNullOrWhiteSpace(cosmosContainerName);
 
             CosmosClient dbClient = new CosmosClient(cosmosAccountName, cosmosKey);
             this._container = dbClient.GetContainer(cosmosDbName, cosmosContainerName);
@@ -31,16 +24,7 @@ namespace PTPlaylistMVC.Services
 
         public CosmosDbService(CosmosClient dbClient, string dbName, string containerName)
         {
-            this._isConfigured =
-                dbClient != null &&
-                !string.IsNullOrWhiteSpace(dbName) &&
-                !string.IsNullOrWhiteSpace(containerName);
-
             this._container = dbClient.GetContainer(dbName, containerName);
-        }
-
-        public bool IsConfigured() {
-            return this._isConfigured;
         }
 
         public async Task AddVideoAsync(Video video)

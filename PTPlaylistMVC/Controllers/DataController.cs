@@ -10,11 +10,19 @@ namespace PTPlaylistMVC.Controllers
     [Route("api/data")]
     public class DataController : ApiController
     {
-        private static IYoutubeService _youtubeService = new YoutubeService();
+        private static readonly IYoutubeService _youtubeService = new YoutubeService();
 
-        private static readonly ICosmosDbService _cosmosDbService = new CosmosDbService();
+        private static ICosmosDbService _cosmosDbService;
 
         private static Regex alphanumericRegex = new Regex("[^a-zA-Z0-9 -]");
+
+        public DataController()
+        {
+            if(bool.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["USE_COSMOS_DB"]))
+            {
+                _cosmosDbService = new CosmosDbService();
+            }
+        }
 
         // GET api/data/{query}
         public async Task<string> GetAsync(string query)
@@ -25,7 +33,7 @@ namespace PTPlaylistMVC.Controllers
 
             query = alphanumericRegex.Replace(query, "");
 
-            if (_cosmosDbService.IsConfigured()) {
+            if (_cosmosDbService != null) {
                 Models.Video storedVideo = await _cosmosDbService.GetVideoAsync(query);
                 if (storedVideo != null && !string.IsNullOrWhiteSpace(storedVideo.VideoId))
                 {
@@ -49,7 +57,7 @@ namespace PTPlaylistMVC.Controllers
                     return videoId;
                 }
             }
-            else
+            else // Cosmos DB unavailable
             {
                 return await _youtubeService.GetSingleVideoId(query);
             }
