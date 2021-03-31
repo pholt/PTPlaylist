@@ -12,41 +12,27 @@ namespace PTPlaylistMVC.Services
 {
     public class YoutubeService : IYoutubeService
     {
-        private static HttpClient _httpClient;
-        private static string _urlBase = "https://www.googleapis.com/youtube/v3/search?key={0}&q={1}&part=snippet&maxResults=1&safeSearch=none&type=video&videoEmbeddable=true";
-        private static readonly string API_KEY = System.Web.Configuration.WebConfigurationManager.AppSettings["API_KEY"];
-
         private static YouTubeService _youtubeService;
 
-        public YoutubeService()
+        public YoutubeService(string key)
         {
-            if(!string.IsNullOrWhiteSpace(API_KEY))
+            if (string.IsNullOrWhiteSpace(key))
             {
-                _youtubeService = new YouTubeService(new Google.Apis.Services.BaseClientService.Initializer()
-                {
-                    ApiKey = API_KEY,
-                    ApplicationName = System.Web.Configuration.WebConfigurationManager.AppSettings["ApplicationName"]
-                });
+                throw new ArgumentException("API key must not be empty or null.");
             }
-            else
+
+            _youtubeService = new YouTubeService(new Google.Apis.Services.BaseClientService.Initializer()
             {
-                _httpClient = new HttpClient();
-            }
+                ApiKey = key,
+                ApplicationName = System.Web.Configuration.WebConfigurationManager.AppSettings["ApplicationName"]
+            });
         }
 
         public async Task<string> GetSingleVideoId(string query)
         {
-            Google.Apis.YouTube.v3.Data.SearchListResponse searchResponse;
-            if (_youtubeService != null)
-            {
-                searchResponse = await GetSearchListDataFromService(query);
-            }
-            else
-            {
-                searchResponse = await GetSearchListDataFromHttpClient(query);
-            }
+            Google.Apis.YouTube.v3.Data.SearchListResponse searchResponse = await GetSearchListData(query);
 
-            if (searchResponse != null && searchResponse.Items.Count <= 0)
+            if (searchResponse == null || searchResponse.Items.Count <= 0)
             {
                 return ""; // TODO: Throw exception?
             }
@@ -56,7 +42,7 @@ namespace PTPlaylistMVC.Services
             return videoId;
         }
 
-        private async Task<Google.Apis.YouTube.v3.Data.SearchListResponse> GetSearchListDataFromService(string query)
+        private async Task<Google.Apis.YouTube.v3.Data.SearchListResponse> GetSearchListData(string query)
         {
             var searchListRequest = _youtubeService.Search.List("id");
             searchListRequest.Q = query;
@@ -68,20 +54,8 @@ namespace PTPlaylistMVC.Services
             return await searchListRequest.ExecuteAsync();
         }
 
-        private async Task<Google.Apis.YouTube.v3.Data.SearchListResponse> GetSearchListDataFromHttpClient(string query)
-        {
-            string formattedUrl = String.Format(_urlBase, API_KEY, HttpUtility.UrlEncode(query));
-            var searchResult = await _httpClient.GetStringAsync(formattedUrl);
-            return JsonConvert.DeserializeObject<Google.Apis.YouTube.v3.Data.SearchListResponse>(searchResult);
-        }
-
         public async Task<bool> IsYouTubeVideoPlayable(string videoId)
         {
-            if (_youtubeService == null)
-            {
-                throw new Exception("Youtube Service required to perform this function.");
-            }
-
             var videoListRequest = _youtubeService.Videos.List("status");
             videoListRequest.Id = videoId;
             var videoListResponse = await videoListRequest.ExecuteAsync();
@@ -96,7 +70,7 @@ namespace PTPlaylistMVC.Services
             return embeddable && !searchResult.Status.PrivacyStatus.ToLower().Contains("private");
         }
 
-        private async Task<Google.Apis.YouTube.v3.Data.VideoListResponse> GetVideoListResponseFromService(string videoId)
+        private async Task<Google.Apis.YouTube.v3.Data.VideoListResponse> GetVideoListResponse(string videoId)
         {
             var videoListRequest = _youtubeService.Videos.List("status");
             videoListRequest.Id = videoId;

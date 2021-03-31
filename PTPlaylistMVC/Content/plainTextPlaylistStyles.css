@@ -174,10 +174,14 @@ table {
     width: 80%;
     height: 90%;
     max-width: 800px;
-    max-height: 500px;
+    max-height: 570px;
     border: 1px solid black;
     background-color: #d0d0d0;
 }
+
+    #apiKey {
+        width: 400px;
+    }
 
     #addToPlaylistFormInnerContent > * {
         margin-left: 15%;

@@ -31,7 +31,7 @@ $(function () {
     });
 
     setEvenCellWidths();
-    document.getElementById("query").focus();
+    document.getElementById("apiKey").focus();
 });
 
 function showHideAddForm() {
@@ -168,13 +168,13 @@ function addVideos() {
     }
 
     $('#query').val(""); // Clear input field so users don't accidentally add the same input twice.
-    hideAddForm();
+    showHideAddForm();
 }
 
 // Queries the YouTube API for the video.
 function queryForVideoId(input) {
     if (input) {
-        results = $.getJSON("/api/data", { query: input }, handleYoutubeSearchResult);
+        results = $.getJSON("/api/data", { query: input, key: document.getElementById("apiKey").value }, handleYoutubeSearchResult);
     }
 }
 
@@ -192,7 +192,7 @@ function handleYoutubeSearchResult(result) {
         setCurrentVideo(currentVideoIndex);
     } else {
         // Error!
-        console.log("Unexpected result: " + result);
+        console.log("Unexpected result.");
     }
 }
 
