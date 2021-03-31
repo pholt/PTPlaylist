@@ -118,8 +118,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CosmosDbServiceTests.cs" />
+    <Compile Include="DataControllerTests.cs" />
+    <Compile Include="MockObjects\MockCosmosDbService.cs" />
+    <Compile Include="MockObjects\MockYoutubeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YoutubeServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
