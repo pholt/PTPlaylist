@@ -14,7 +14,9 @@ This application is fairly simple. It splits text input up into individual searc
 ## Usage:
 I deploy this via Web Deploy in Visual Studio. If you want to run this, you'll need to plug in your own YoutubeV3 enabled API key into the Web.config. 
 
-More info on getting that setup can be found here: https://developers.google.com/youtube/v3
+Additionally, there is an Azure Cosmos DB alleviating the Google Youtube API usage issue. This is an optional feature however.
+
+More info on getting an API key set up can be found here: https://developers.google.com/youtube/v3
 
 ## The Worst Issue:
 Google has increased the quota usage of the Search action of the YoutubeV3 API from 1 to 100. Thus the free tier of the quota (10,000) allows only 100 plays per day! This is abysmal. To do a sort of pseudo-caching, the application now uses an Azure CosmosDB instance to store search queries -> search result to reduce the need of hitting the Youtube API as much.
